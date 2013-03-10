@@ -1,4 +1,4 @@
-Libspe4rc v0.1.0
+Libspe4rc v0.1.0a
 =======
 
 Libspe4rc (pronunced libsp-i-rc) is a library that can be used to build an IRC client.
@@ -32,7 +32,8 @@ make
 
 ## How to use it?
 
-<pre>
+```c++
+// This will be used as a NOTICE event listener
 class NoticeDisplay : UserEvent
 {
         bool notify()
@@ -42,19 +43,23 @@ class NoticeDisplay : UserEvent
         }
 }
 
-// ...
+// Initialize a new session
+void new_session()
+{
+        com::Session* client = new com::Session();
+        client->nickname("spe4rc");
+        client->altnickname("spe4rc_");
+        client->username("spe4rc");
+        client->realname("My Libspe4rc client");
+        client->hostname("irc.spe4k.com");
+        client->port(6667);
+        NoticeDisplay nd;
+        client->add_notifier(com::ON_NOTICE, &nd);
+        client->start();
+}
 
-  com::Session* client = new com::Session();
-  client->nickname("spe4rc");
-  client->altnickname("spe4rc_");
-  client->username("spe4rc");
-  client->realname("My Libspe4rc client");
-  client->hostname("irc.spe4k.com");
-  client->port(6667);
-  NoticeDisplay nd;
-  client->add_notifier(com::ON_NOTICE, &nd);
-  client->start();
-</pre>
+// ...
+```
 
 ## License
 
