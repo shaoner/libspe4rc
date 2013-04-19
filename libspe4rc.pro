@@ -10,7 +10,7 @@ TEMPLATE = lib
 
 # Target
 TARGET = spe4rc
-CONFIG += staticlib
+CONFIG += sharedlib
 # Temporary files
 OBJECTS_DIR = ./build/objs
 MOC_DIR = ./build/src

@@ -2,7 +2,7 @@
 *.exe
 *~
 *.a
-*.so
+*.so*
 *.dll
 *.pro.user
 Makefile
