@@ -9,6 +9,11 @@
 namespace com
 {
 
+	Event::~Event()
+	{
+	}
+
+
 	void
 	Event::session(Session* session)
 	{

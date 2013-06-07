@@ -15,10 +15,14 @@ namespace com
 		_prefix(""),
 		_nickname(""),
 		_username(""),
-		_realname("")
+		_realname(""),
+		_proto(new Protocol()),
+		_channelEvent(new ChannelEvent()),
+		_userEvent(new UserEvent()),
+		_serverEvent(new ServerEvent()),
+		_rawEvent(new RawEvent())
 	{
-		_proto = new Protocol();
-		_eventDriver = new EventProcessor(_proto);
+
 		// register socket event listeners
 		connect(_proto->socket(), SIGNAL(connected()), this, SLOT(on_connect()));
 		connect(_proto->socket(), SIGNAL(disconnected()), this, SLOT(on_disconnect()));
@@ -29,7 +33,10 @@ namespace com
 
 	Session::~Session()
 	{
-		delete _eventDriver;
+		delete _rawEvent;
+		delete _serverEvent;
+		delete _userEvent;
+		delete _channelEvent;
 		delete _proto;
 	}
 
@@ -95,7 +102,7 @@ namespace com
 				_parserDriver.parse(line, &message);
 				if (message.isValid())
 				{
-					_eventDriver->process(message);
+					process(message);
 				}
 			}
 		}
@@ -153,29 +160,65 @@ namespace com
 	}
 
 	void
-	Session::add_notifier(EventName type, Event* notifier)
+	Session::process(Message& message)
 	{
-		notifier->session(this);
-		_eventDriver->add_notifier(type, notifier);
-	}
+		// bool isDefaultProcessed = true;
+		// EventName eType;
+		// QList<Event*> eventList;
+		// Event* event = 0;
 
-	void
-	Session::remove_notifier(EventName type, Event* notifier)
-	{
-		_eventDriver->remove_notifier(type, notifier);
-	}
+		if (message.commandType == Message::MSG_CMDNAME)
+		{
+			// Handle mandatory events
+			// This is not elegant, but it allows to handle non standard cases
+			// like PING and it avoids a complex mechanism
+			if (message.commandName == "NOTICE")
+			{
+				_userEvent->fill_in(message);
+				emit onNotice(_userEvent);
+			}
+			else if (message.commandName == "PING")
+			{
+				_serverEvent->fill_in(message);
+				emit onPing(_serverEvent);
+				_proto->write("PONG " + message.params[0]);
+			}
+			else
+			{
+				qDebug() << "Unknown command " << message.commandName;
+			}
 
-	void
-	Session::set_default_notifier(EventName type, Event* notifier)
-	{
-		notifier->session(this);
-		_eventDriver->set_default_notifier(type, notifier);
-	}
+		}
+		else // message.commandType == Message::MSG_RAWNUM
+		{
+			_rawEvent->fill_in(message);
+			emit onRaw(_rawEvent);
+		}
 
-	void
-	Session::reset_default_notifier(EventName type)
-	{
-		_eventDriver->reset_default_notifier(type);
+
+		// eventList = _eventMap[eType];
+		// Call each event callback
+		// for (QList<Event*>::iterator it = eventList.begin();
+		// 	 it != eventList.end();
+		// 	 ++it)
+		// {
+		// 	event = *it;
+		// 	if (event)
+		// 	{
+		// 		event->fill_in(message);
+		// 		isDefaultProcessed = isDefaultProcessed && event->notify();
+		// 	}
+		// }
+		// // Default event
+		// if (isDefaultProcessed)
+		// {
+		// 	event = _defaultEventMap[eType];
+		// 	if (event)
+		// 	{
+		// 		event->fill_in(message);
+		// 		event->notify();
+		// 	}
+		// }
 	}
 
 	const QString&

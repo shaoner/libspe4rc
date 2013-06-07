@@ -20,7 +20,6 @@ INCLUDEPATH += src
 HEADERS += src/channel-event.hh \
     src/common.hh \
     src/event.hh \
-    src/event-processor.hh \
     src/message.hh \
     src/parser.hh \
     src/protocol.hh \
@@ -33,7 +32,6 @@ SOURCES += src/parser.cc \
     src/session.cc \
     src/protocol.cc \
     src/message.cc \
-    src/event-processor.cc \
     src/event.cc \
     src/user-event.cc \
     src/channel-event.cc \

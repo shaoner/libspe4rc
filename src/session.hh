@@ -14,11 +14,10 @@
 # include <common.hh>
 # include <protocol.hh>
 # include <parser.hh>
-# include <event-processor.hh>
+# include <all-events.hh>
 
 namespace com
 {
-
 	/*!
 	 * \class Session
 	 * \brief This class is a single IRC connection
@@ -42,11 +41,12 @@ namespace com
 		void part(const QString& channel);
 		void notice(const QString& who, const QString& message);
 		void mode(const QString& who, const QString& mode);
-		/// IRC event listener notifier
-		void add_notifier(EventName type, Event* notifier);
-		void remove_notifier(EventName type, Event* notifier);
-		void set_default_notifier(EventName type, Event* notifier);
-		void reset_default_notifier(EventName type);
+	signals:
+		void onNotice(UserEvent* event);
+		void onPing(ServerEvent* event);
+		void onRaw(RawEvent* event);
+	private:
+		void process(Message& message);
 	private slots:
 		/// Socket event listeners
 		void on_connect();
@@ -80,8 +80,11 @@ namespace com
 		QString _realname;
 		QByteArray _readData;
 		Parser _parserDriver;
-		EventProcessor* _eventDriver;
 		Protocol* _proto;
+		ChannelEvent* _channelEvent;
+		UserEvent* _userEvent;
+		ServerEvent* _serverEvent;
+		RawEvent* _rawEvent;
 	};
 
 } // namespace com

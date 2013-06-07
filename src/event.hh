@@ -40,14 +40,12 @@ namespace com
 	class Event
 	{
 	public:
+		virtual ~Event();
+	public:
 		/// Describes how to fill an event from an irc message
 		virtual void fill_in(Message& message) = 0;
 		/// Set the associated session to have access in the notifier
 		void session(Session* session);
-		/// Describes how to notify
-		/// This has to be defined by the notifier class
-		/// It acts as a callback
-		virtual bool notify() = 0;
 	protected:
 		/// Get associated irc session
 		const Session& session() const;
