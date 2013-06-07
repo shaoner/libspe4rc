@@ -9,22 +9,22 @@
 namespace com
 {
 
-  void
-  Event::session(Session* session)
-  {
-    _session = session;
-  }
+	void
+	Event::session(Session* session)
+	{
+		_session = session;
+	}
 
-  const Session&
-  Event::session() const
-  {
-    return *_session;
-  }
+	const Session&
+	Event::session() const
+	{
+		return *_session;
+	}
 
-  Session&
-  Event::session()
-  {
-    return *_session;
-  }
+	Session&
+	Event::session()
+	{
+		return *_session;
+	}
 
 } // namespace com

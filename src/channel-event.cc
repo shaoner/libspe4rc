@@ -9,16 +9,16 @@
 namespace com
 {
 
-  void
-  ChannelEvent::fill_in(Message& message)
-  {
-    _channel = message.params[0];
-  }
+	void
+	ChannelEvent::fill_in(Message& message)
+	{
+		_channel = message.params[0];
+	}
 
-  const QString&
-  ChannelEvent::channel() const
-  {
-    return _channel;
-  }
+	const QString&
+	ChannelEvent::channel() const
+	{
+		return _channel;
+	}
 
 } // namespace com
