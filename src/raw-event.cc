@@ -13,9 +13,8 @@ namespace com
 	RawEvent::fill_in(Message& message)
 	{
 		_raw = message.rawNumber;
-		_target = message.params[0];
-		message.params.pop_front();
-		_params = message.params;
+		_target = message.params.takeFirst();
+		_rawmsg = message.params.join(" ");
 	}
 
 	quint16
@@ -30,10 +29,10 @@ namespace com
 		return _target;
 	}
 
-	const QStringList&
-	RawEvent::params() const
+	const QString&
+	RawEvent::rawmsg() const
 	{
-		return _params;
+		return _rawmsg;
 	}
 
 } // namespace com

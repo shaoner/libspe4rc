@@ -28,11 +28,11 @@ namespace com
 		/// Get the target, usually this is the client's nickname
 		const QString& target() const;
 		/// Get facultative parameters
-		const QStringList& params() const;
+		const QString& rawmsg() const;
 	private:
 		quint16 _raw;
 		QString _target;
-		QStringList _params;
+		QString _rawmsg;
 	};
 
 } // namespace com
