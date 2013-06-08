@@ -19,7 +19,6 @@ MOC_DIR = ./build/src
 INCLUDEPATH += src
 HEADERS += src/channel-event.hh \
 	src/client.hh \
-    src/common.hh \
 	src/connector.hh \
     src/event.hh \
     src/message.hh \

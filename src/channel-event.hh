@@ -18,13 +18,24 @@ namespace com
 	class ChannelEvent : public Event
 	{
 	public:
+		/// Ctor
+		ChannelEvent();
+	public:
 		/// Fill ChannelEvent field with an irc message
 		void fill_in(Message& message);
-	protected:
+		/// Get client info
+		const QString& nick() const;
+		const QString& user() const;
+		const QString& host() const;
 		/// Get channel's name
 		const QString& channel() const;
+		const QString& arg() const;
 	private:
+		QString _nick;
+		QString _user;
+		QString _host;
 		QString _channel;
+		QString _arg;
 	};
 
 } // namespace com
