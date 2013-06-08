@@ -50,6 +50,7 @@ namespace com
 		void onConnect(ServerEvent* event);
 		void onNotice(UserEvent* event);
 		void onJoin(ChannelEvent* event);
+		void onPart(ChannelEvent* event);
 		void onPing(ServerEvent* event);
 		void onRaw(RawEvent* event);
 	private slots:

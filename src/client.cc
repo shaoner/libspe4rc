@@ -160,6 +160,11 @@ namespace com
 				_channelEvent->fill_in(message);
 				emit onJoin(_channelEvent);
 			}
+			else if (message.commandName == "PART")
+			{
+				_channelEvent->fill_in(message);
+				emit onPart(_channelEvent);
+			}
 			else
 			{
 				qDebug() << "Unknown command " << message.commandName;
