@@ -20,6 +20,7 @@ namespace com
 	public:
 		/// Fill ServerEvent field with an irc message
 		void fill_in(Message& m);
+		void fill_in(const QString& response);
 	public:
 		/// Get server response
 		const QString& response() const;

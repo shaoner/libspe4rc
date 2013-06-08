@@ -18,25 +18,25 @@ MOC_DIR = ./build/src
 # Sources
 INCLUDEPATH += src
 HEADERS += src/channel-event.hh \
+	src/client.hh \
     src/common.hh \
+	src/connector.hh \
     src/event.hh \
     src/message.hh \
     src/parser.hh \
-    src/protocol.hh \
     src/raw-event.hh \
     src/server-event.hh \
-    src/session.hh \
     src/user-event.hh
 
-SOURCES += src/parser.cc \
-    src/session.cc \
-    src/protocol.cc \
-    src/message.cc \
+SOURCES += src/channel-event.cc \
+	src/client.cc \
+	src/connector.cc \
     src/event.cc \
-    src/user-event.cc \
-    src/channel-event.cc \
+    src/message.cc \
+    src/parser.cc \
+    src/raw-event.cc \
     src/server-event.cc \
-    src/raw-event.cc
+    src/user-event.cc
 
 doc.depends = $(SOURCES)
 doc.commands = doxygen Doxyfile

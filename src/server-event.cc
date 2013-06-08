@@ -15,6 +15,12 @@ namespace com
 		_response = message.params[0];
 	}
 
+	void
+	ServerEvent::fill_in(const QString& response)
+	{
+		_response = response;
+	}
+
 	const QString&
 	ServerEvent::response() const
 	{

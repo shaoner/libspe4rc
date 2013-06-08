@@ -23,7 +23,6 @@ namespace com
 	public:
 		/// Fill RawEvent field with an irc message
 		void fill_in(Message& message);
-	protected:
 		/// Get the raw number
 		quint16 raw() const;
 		/// Get the target, usually this is the client's nickname

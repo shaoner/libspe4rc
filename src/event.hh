@@ -12,26 +12,10 @@
 namespace com
 {
 
-	/// Event listener's types
-	enum EventName
-	{
-		ON_NOTICE,
-		ON_MODE,
-		ON_NICK,
-		ON_PRIVMSG,
-		ON_CHANMSG,
-		ON_CONNECT,
-		ON_DISCONNECT,
-		ON_KILL,
-		ON_PING,
-		ON_JOIN,
-		ON_RAW
-	};
-
-	/// Define the number of event listener's types
+/// Define the number of event listener's types
 # define N_EVENTS 11
 
-	class Session;
+	class Client;
 
 	/*!
 	 * \class Event
@@ -45,13 +29,13 @@ namespace com
 		/// Describes how to fill an event from an irc message
 		virtual void fill_in(Message& message) = 0;
 		/// Set the associated session to have access in the notifier
-		void session(Session* session);
+		void set_client(Client* Client);
 	protected:
-		/// Get associated irc session
-		const Session& session() const;
-		Session& session();
+		/// Get associated irc client session
+		const Client& client() const;
+		Client& client();
 	private:
-		Session* _session;
+		Client* _client;
 	};
 
 } // namespace com

@@ -15,21 +15,21 @@ namespace com
 
 
 	void
-	Event::session(Session* session)
+	Event::set_client(Client* client)
 	{
-		_session = session;
+		_client = client;
 	}
 
-	const Session&
-	Event::session() const
+	const Client&
+	Event::client() const
 	{
-		return *_session;
+		return *_client;
 	}
 
-	Session&
-	Event::session()
+	Client&
+	Event::client()
 	{
-		return *_session;
+		return *_client;
 	}
 
 } // namespace com
