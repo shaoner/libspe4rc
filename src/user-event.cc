@@ -9,36 +9,49 @@
 namespace com
 {
 
+	UserEvent::UserEvent() :
+		_nick(""),
+		_user(""),
+		_host(""),
+		_target(""),
+		_arg("")
+	{
+	}
+
 	void
-	UserEvent::fill_in(Message& ircmessage)
+	UserEvent::fill_in(Message& message)
 	{
-		_senderNick = ircmessage.nick;
-		_senderUser = ircmessage.user;
-		_senderHost = ircmessage.host;
-		if (ircmessage.params.size() > 0)
+		_nick = message.nick;
+		_user = message.user;
+		_host = message.host;
+		if (message.params.size() > 0)
 		{
-			_target = ircmessage.params[0];
-			if (ircmessage.params.size() > 1)
-				_message = ircmessage.params[1];
+			_target = message.params[0];
+			if (message.params.size() > 1)
+				_arg = message.params[1];
+			else
+				_arg = "";
 		}
+		else
+			_target = "";
 	}
 
 	const QString&
-	UserEvent::senderNick() const
+	UserEvent::nick() const
 	{
-		return _senderNick;
+		return _nick;
 	}
 
 	const QString&
-	UserEvent::senderUser() const
+	UserEvent::user() const
 	{
-		return _senderUser;
+		return _user;
 	}
 
 	const QString&
-	UserEvent::senderHost() const
+	UserEvent::host() const
 	{
-		return _senderHost;
+		return _host;
 	}
 
 	const QString&
@@ -48,9 +61,9 @@ namespace com
 	}
 
 	const QString&
-	UserEvent::message() const
+	UserEvent::arg() const
 	{
-		return _message;
+		return _arg;
 	}
 
 } // namespace com

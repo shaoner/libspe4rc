@@ -19,23 +19,25 @@ namespace com
 	class UserEvent : public Event
 	{
 	public:
+		/// Ctor
+		UserEvent();
+	public:
 		/// Fill UserEvent field with an IRC message
 		void fill_in(Message& message);
-	protected:
 		/// Get sender's attributes
-		const QString& senderNick() const;
-		const QString& senderUser() const;
-		const QString& senderHost() const;
+		const QString& nick() const;
+		const QString& user() const;
+		const QString& host() const;
 		/// Get target
 		const QString& target() const;
 		/// Get text message
-		const QString& message() const;
+		const QString& arg() const;
 	private:
-		QString _senderNick;
-		QString _senderUser;
-		QString _senderHost;
+		QString _nick;
+		QString _user;
+		QString _host;
 		QString _target;
-		QString _message;
+		QString _arg;
 	};
 
 } // namespace com
