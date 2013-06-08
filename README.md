@@ -1,4 +1,4 @@
-Libspe4rc v0.2.0a
+Libspe4rc v0.2.1a
 =======
 
 Libspe4rc (pronunced libspea-rc) is a library that can be used to build an IRC client.
