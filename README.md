@@ -51,7 +51,7 @@ class IrcHandler
    	void on_join(ChannelEvent* event)
    	{
 		qDebug() << "Hello " << event->client()->nickname();
-		qDebug() << "* " << event->who() << " has joined " << event->channel();
+		qDebug() << "* " << event->nick() << " has joined " << event->channel();
    	}
 };
 // ...
