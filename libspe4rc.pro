@@ -39,7 +39,7 @@ SOURCES += src/channel-event.cc \
 
 doc.depends = $(SOURCES)
 doc.commands = doxygen Doxyfile
-#(cat Doxyfile; echo "INPUT = $?") | doxygen -
+
 QMAKE_EXTRA_TARGETS += doc
 
 unix:!symbian {
