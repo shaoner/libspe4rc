@@ -56,6 +56,12 @@ namespace com
 	}
 
 	void
+	Client::send(const QString& target, const QString& message)
+	{
+		write("PRIVMSG " + target + " :" + message);
+	}
+
+	void
 	Client::set_nickname(const QString& nickname)
 	{
 		if (!nickname.isEmpty())
