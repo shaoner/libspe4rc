@@ -156,6 +156,19 @@ namespace com
 				emit onPing(_serverEvent);
 				write("PONG " + message.params[0]);
 			}
+			else if (message.commandName == "PRIVMSG")
+			{
+				if (message.params.count() > 0 && message.params[0].startsWith('#'))
+				{
+					_channelEvent->fill_in(message);
+					emit onChannelMessage(_channelEvent);
+				}
+				else
+				{
+					_userEvent->fill_in(message);
+					emit onPrivateMessage(_userEvent);
+				}
+			}
 			else if (message.commandName == "NOTICE")
 			{
 				_userEvent->fill_in(message);

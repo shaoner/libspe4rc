@@ -51,6 +51,8 @@ namespace com
 		void onError(ServerEvent* event);
 		void onConnect(ServerEvent* event);
 		void onNotice(UserEvent* event);
+		void onChannelMessage(ChannelEvent* event);
+		void onPrivateMessage(UserEvent* event);
 		void onJoin(ChannelEvent* event);
 		void onPart(ChannelEvent* event);
 		void onPing(ServerEvent* event);
