@@ -3,6 +3,7 @@
 
 # include <QTcpSocket>
 # include <QString>
+# include <QHash>
 
 # include <channel-event.hh>
 # include <user-event.hh>
@@ -43,6 +44,7 @@ namespace com
 		const QString& altnickname() const;
 		const QString& user() const;
 		const QString& realname() const;
+		const QHash< QString, QList<QString> >& channels() const;
 		/// Server paramaters
 		const QString& hostname() const;
 		quint16 port() const;
@@ -70,6 +72,7 @@ namespace com
 		QString _altnickname;
 		QString _user;
 		QString _realname;
+		QHash< QString, QList<QString> > _channels;
 		ChannelEvent* _channelEvent;
 		UserEvent* _userEvent;
 		ServerEvent* _serverEvent;

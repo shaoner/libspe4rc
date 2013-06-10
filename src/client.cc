@@ -115,6 +115,12 @@ namespace com
 		return _realname;
 	}
 
+	const QHash< QString, QList<QString> >&
+	Client::channels() const
+	{
+		return _channels;
+	}
+
 	const QString&
 	Client::hostname() const
 	{
@@ -176,6 +182,14 @@ namespace com
 			else if (message.commandName == "JOIN")
 			{
 				_channelEvent->fill_in(message);
+				if (_channelEvent->nick() == _nickname)
+				{
+					_channels.insert(_channelEvent->channel(), QList<QString>());
+				}
+				else
+				{
+					_channels[_channelEvent->channel()].append(_channelEvent->nick());
+				}
 				emit onJoin(_channelEvent);
 			}
 			else if (message.commandName == "PART")
@@ -191,6 +205,16 @@ namespace com
 		else // message.commandType == Message::MSG_RAWNUM
 		{
 			_rawEvent->fill_in(message);
+			switch (_rawEvent->raw())
+			{
+				case RPL_NAMREPLY:
+				{
+					QStringList list = message.params[2].split(" ");
+					_channels.insert(message.params[1], list);
+					break;
+				}
+
+			}
 			emit onRaw(_rawEvent);
 		}
 	}
