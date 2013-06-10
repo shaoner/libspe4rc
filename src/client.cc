@@ -130,14 +130,13 @@ namespace com
 	void
 	Client::on_connect()
 	{
+		if (!_password.isEmpty())
+			write("PASS " + _password);
 		write("NICK " + _nickname);
 		/*
 		 * FIXME: Alternative nickname is not handled
 		 */
 		write("USER " + _user + " 8 * :" + _realname);
-		/*
-		 * FIXME: Server password
-		 */
 		_serverEvent->fill_in("");
 		emit onConnect(_serverEvent);
 	}
