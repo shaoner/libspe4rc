@@ -44,7 +44,7 @@ namespace com
 		const QString& altnickname() const;
 		const QString& user() const;
 		const QString& realname() const;
-		const QHash< QString, QList<QString> >& channels() const;
+		const QHash<QString, QStringList>& channels() const;
 		/// Server paramaters
 		const QString& hostname() const;
 		quint16 port() const;
@@ -59,6 +59,7 @@ namespace com
 		void onPart(ChannelEvent* event);
 		void onPing(ServerEvent* event);
 		void onRaw(RawEvent* event);
+		void onUserList(const QString& channel, QStringList& users);
 	private slots:
 		/// Socket event listeners
 		void on_connect();
@@ -72,7 +73,7 @@ namespace com
 		QString _altnickname;
 		QString _user;
 		QString _realname;
-		QHash< QString, QList<QString> > _channels;
+		QHash<QString, QStringList> _channels;
 		ChannelEvent* _channelEvent;
 		UserEvent* _userEvent;
 		ServerEvent* _serverEvent;

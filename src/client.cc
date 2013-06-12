@@ -115,7 +115,7 @@ namespace com
 		return _realname;
 	}
 
-	const QHash< QString, QList<QString> >&
+	const QHash<QString, QStringList>&
 	Client::channels() const
 	{
 		return _channels;
@@ -209,8 +209,21 @@ namespace com
 			{
 				case RPL_NAMREPLY:
 				{
-					QStringList list = message.params[2].split(" ");
-					_channels.insert(message.params[1], list);
+					const QStringList& users = message.params[2].split(" ");
+					if (_channels.contains(message.params[1]))
+						_channels[message.params[1]].append(users);
+					else
+						_channels.insert(message.params[1], users);
+					break;
+				}
+				case RPL_ENDOFNAMES:
+				{
+					if (_channels.contains(message.params[0]))
+					{
+						QStringList& users = _channels[message.params[0]];
+						users.sort();
+						emit onUserList(message.params[0], users);
+					}
 					break;
 				}
 
