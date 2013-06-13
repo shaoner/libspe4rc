@@ -10,11 +10,7 @@ namespace com
 {
 
 	UserEvent::UserEvent() :
-		_nick(""),
-		_user(""),
-		_host(""),
-		_target(""),
-		_arg("")
+		_target("")
 	{
 	}
 
@@ -25,45 +21,16 @@ namespace com
 		_user = message.user;
 		_host = message.host;
 		if (message.params.size() > 0)
-		{
-			_target = message.params[0];
-			if (message.params.size() > 1)
-				_arg = message.params[1];
-			else
-				_arg = "";
-		}
+			_target = message.params.takeFirst();
 		else
 			_target = "";
-	}
-
-	const QString&
-	UserEvent::nick() const
-	{
-		return _nick;
-	}
-
-	const QString&
-	UserEvent::user() const
-	{
-		return _user;
-	}
-
-	const QString&
-	UserEvent::host() const
-	{
-		return _host;
+		_args = message.params;
 	}
 
 	const QString&
 	UserEvent::target() const
 	{
 		return _target;
-	}
-
-	const QString&
-	UserEvent::arg() const
-	{
-		return _arg;
 	}
 
 } // namespace com

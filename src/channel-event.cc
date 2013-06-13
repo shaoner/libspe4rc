@@ -10,11 +10,7 @@ namespace com
 {
 
 	ChannelEvent::ChannelEvent() :
-		_nick(""),
-		_user(""),
-		_host(""),
-		_channel(""),
-		_arg("")
+		_channel("")
 	{
 	}
 
@@ -26,45 +22,16 @@ namespace com
 		 _host = message.host;
 
 		if (message.params.size() > 0)
-		{
-			_channel = message.params[0];
-			if (message.params.size() > 1)
-				_arg = message.params[1];
-			else
-				_arg = "";
-		}
+			_channel = message.params.takeFirst();
 		else
 			_channel = "";
-	}
-
-	const QString&
-	ChannelEvent::nick() const
-	{
-		return _nick;
-	}
-
-	const QString&
-	ChannelEvent::user() const
-	{
-		return _user;
-	}
-
-	const QString&
-	ChannelEvent::host() const
-	{
-		return _host;
+		_args = message.params;
 	}
 
 	const QString&
 	ChannelEvent::channel() const
 	{
 		return _channel;
-	}
-
-	const QString&
-	ChannelEvent::arg() const
-	{
-		return _arg;
 	}
 
 } // namespace com

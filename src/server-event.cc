@@ -12,7 +12,14 @@ namespace com
 	void
 	ServerEvent::fill_in(Message& message)
 	{
-		_response = message.params[0];
+		_nick = message.nick;
+		_user = message.user;
+		_host = message.host;
+		if (message.params.size() > 0)
+			_response = message.params[0];
+		else
+			_response = "";
+		_args = message.params;
 	}
 
 	void

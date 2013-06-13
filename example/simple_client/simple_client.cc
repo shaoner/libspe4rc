@@ -15,7 +15,7 @@ SimpleClient::onNotice(UserEvent* event)
 {
 	qDebug() << "* [Notice from " << event->nick()
 			 << " to " << event->target() << "]: "
-			 << event->arg();
+			 << event->args()[0];
 }
 
 void
@@ -29,7 +29,7 @@ SimpleClient::onJoin(ChannelEvent* event)
 {
 	qDebug() << "* " << event->nick()
 			 << " has joined " << event->channel()
-			 << " ( " << event->arg() << " )";
+			 << " ( " << event->args()[0] << " )";
 }
 
 void
@@ -37,7 +37,7 @@ SimpleClient::onPart(ChannelEvent* event)
 {
 	qDebug() << "* " << event->nick()
 			 << " has left " << event->channel()
-			 << " ( " << event->arg() << " )";
+			 << " ( " << event->args()[0] << " )";
 }
 
 int main(int argc, char *argv[])

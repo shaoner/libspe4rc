@@ -13,7 +13,6 @@ namespace com
 	{
 	}
 
-
 	void
 	Event::set_client(Client* client)
 	{

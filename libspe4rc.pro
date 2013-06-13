@@ -19,6 +19,7 @@ MOC_DIR = ./build/src
 INCLUDEPATH += src
 HEADERS += src/channel-event.hh \
 	src/client.hh \
+	src/command-event.hh \
 	src/connector.hh \
     src/event.hh \
     src/message.hh \
@@ -29,6 +30,7 @@ HEADERS += src/channel-event.hh \
 
 SOURCES += src/channel-event.cc \
 	src/client.cc \
+	src/command-event.cc \
 	src/connector.cc \
     src/event.cc \
     src/message.cc \
