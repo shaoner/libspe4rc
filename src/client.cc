@@ -212,9 +212,7 @@ namespace com
 				}
 
 				if (_channelEvent->nick() == _nickname)
-				{
-					_channels.remove(_channelEvent->channel());
-				}
+					delete _channels.take(_channelEvent->channel());
 
 				emit onQuit(_serverEvent);
 			}
@@ -236,21 +234,17 @@ namespace com
 				case RPL_NAMREPLY:
 				{
 					const QStringList& nicks = message.params[2].split(" ");
+					UserList* users = NULL;
 					if (_channels.contains(message.params[1]))
-						foreach(QString nick, nicks)
-							_channels[message.params[1]]->add(nick);
+						users = _channels[message.params[1]];
 					else
 					{
-						qDebug() << "begin";
-						UserList* users = new UserList();
-						foreach(QString nick, nicks)
-						 	users->add(nick);
-						foreach(User* user, *users)
-						{
-							qDebug() << user->prefix() << " " << user->nick();
-						}
-						qDebug() << "end";
-					 	//_channels.insert(message.params[1], users);
+						users = new UserList();
+						_channels.insert(message.params[1], users);
+					}
+					foreach(QString nick, nicks)
+					{
+						users->add(nick);
 					}
 					break;
 				}
@@ -261,7 +255,6 @@ namespace com
 					 	UserList* users = _channels[message.params[0]];
 						// 	// users.sort();
 					 	emit onUserList(message.params[0], users);
-					 	//qDebug() << users;
 					}
 					break;
 				}
