@@ -115,7 +115,7 @@ namespace com
 		return _realname;
 	}
 
-	const QHash<QString, QStringList>&
+	const QHash<QString, UserList*>&
 	Client::channels() const
 	{
 		return _channels;
@@ -177,19 +177,17 @@ namespace com
 			else if (message.commandName == "JOIN")
 			{
 				_channelEvent->fill_in(message);
-				if ((_channelEvent->nick() == _nickname) && (_channels.contains(_channelEvent->channel())))
-				{
-					_channels[_channelEvent->channel()].append(_channelEvent->nick());
-				}
+				if ((_channelEvent->nick() != _nickname) && (_channels.contains(_channelEvent->channel())))
+					_channels[_channelEvent->channel()]->add(_channelEvent->nick());
 				emit onJoin(_channelEvent);
 			}
 			else if (message.commandName == "PART")
 			{
 				_channelEvent->fill_in(message);
 				if (_channelEvent->nick() == _nickname)
-				{
-					_channels.remove(_channelEvent->channel());
-				}
+					delete _channels.take(_channelEvent->channel());
+				else if (_channels.contains(_channelEvent->channel()))
+					_channels[_channelEvent->channel()]->remove(_channelEvent->nick());
 				emit onPart(_channelEvent);
 			}
 			else if (message.commandName == "MODE")
@@ -208,6 +206,16 @@ namespace com
 			else if (message.commandName == "QUIT")
 			{
 				_serverEvent->fill_in(message);
+				foreach(UserList* users, _channels)
+				{
+					users->remove(_serverEvent->nick());
+				}
+
+				if (_channelEvent->nick() == _nickname)
+				{
+					_channels.remove(_channelEvent->channel());
+				}
+
 				emit onQuit(_serverEvent);
 			}
 			else if (message.commandName == "NOTICE")
@@ -227,27 +235,45 @@ namespace com
 			{
 				case RPL_NAMREPLY:
 				{
-					const QStringList& users = message.params[2].split(" ");
+					const QStringList& nicks = message.params[2].split(" ");
 					if (_channels.contains(message.params[1]))
-						_channels[message.params[1]].append(users);
+						foreach(QString nick, nicks)
+							_channels[message.params[1]]->add(nick);
 					else
-						_channels.insert(message.params[1], users);
+					{
+						qDebug() << "begin";
+						UserList* users = new UserList();
+						foreach(QString nick, nicks)
+						 	users->add(nick);
+						foreach(User* user, *users)
+						{
+							qDebug() << user->prefix() << " " << user->nick();
+						}
+						qDebug() << "end";
+					 	//_channels.insert(message.params[1], users);
+					}
 					break;
 				}
 				case RPL_ENDOFNAMES:
 				{
 					if (_channels.contains(message.params[0]))
 					{
-						QStringList& users = _channels[message.params[0]];
-						// users.sort();
-						emit onUserList(message.params[0], users);
+					 	UserList* users = _channels[message.params[0]];
+						// 	// users.sort();
+					 	emit onUserList(message.params[0], users);
+					 	//qDebug() << users;
 					}
 					break;
 				}
-
 			}
 			emit onRaw(_rawEvent);
 		}
 	}
+
+	// void
+	// Client::remove_user_from(QStringList& userList, QString& user)
+	// {
+	// 	//while (user[0]
+	// }
 
 } // namespace com

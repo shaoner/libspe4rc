@@ -5,6 +5,7 @@
 # include <QString>
 # include <QHash>
 
+# include <user-list.hh>
 # include <channel-event.hh>
 # include <user-event.hh>
 # include <server-event.hh>
@@ -44,7 +45,7 @@ namespace com
 		const QString& altnickname() const;
 		const QString& user() const;
 		const QString& realname() const;
-		const QHash<QString, QStringList>& channels() const;
+		const QHash<QString, UserList*>& channels() const;
 		/// Server paramaters
 		const QString& hostname() const;
 		quint16 port() const;
@@ -62,11 +63,13 @@ namespace com
 		void onUserMode(UserEvent* event);
 		void onQuit(ServerEvent* event);
 		void onRaw(RawEvent* event);
-		void onUserList(const QString& channel, QStringList& users);
+		void onUserList(const QString& channel, UserList* users);
 	private slots:
 		/// Socket event listeners
 		void on_connect();
 		void on_irc_data(Message& message);
+	private:
+		//void remove_user_from(QStringList& userList, QString& user);
 	private:
 		QString _hostname;
 		int _port;
@@ -76,7 +79,7 @@ namespace com
 		QString _altnickname;
 		QString _user;
 		QString _realname;
-		QHash<QString, QStringList> _channels;
+		QHash<QString, UserList*> _channels;
 		ChannelEvent* _channelEvent;
 		UserEvent* _userEvent;
 		ServerEvent* _serverEvent;

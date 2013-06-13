@@ -26,7 +26,9 @@ HEADERS += src/channel-event.hh \
     src/parser.hh \
     src/raw-event.hh \
     src/server-event.hh \
-    src/user-event.hh
+	src/user.hh \
+    src/user-event.hh \
+	src/user-list.hh
 
 SOURCES += src/channel-event.cc \
 	src/client.cc \
@@ -37,7 +39,9 @@ SOURCES += src/channel-event.cc \
     src/parser.cc \
     src/raw-event.cc \
     src/server-event.cc \
-    src/user-event.cc
+	src/user.cc \
+    src/user-event.cc \
+	src/user-list.cc
 
 doc.depends = $(SOURCES)
 doc.commands = doxygen Doxyfile

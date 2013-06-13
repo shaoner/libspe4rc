@@ -1,0 +1,87 @@
+#include <user-list.hh>
+
+namespace com
+{
+
+	UserList::UserList()
+	{
+	}
+
+	UserList::~UserList()
+	{
+		qDebug() << "delete first";
+		while (count() > 0)
+		{
+			delete takeFirst();
+		}
+		qDebug() << "delete end";
+	}
+
+	void
+	UserList::add(User* user)
+	{
+		int size = count();
+		int left = 0;
+		int right = size - 1;
+		int mid = 0;
+
+		while (right > left)
+		{
+			mid = (left + right) / 2;
+			User* curUser = at(mid);
+			if (user < curUser)
+				right = mid - 1;
+			else
+				left = mid + 1;
+		}
+		insert(mid, user);
+	}
+
+	void
+	UserList::add(const QString& nick)
+	{
+		User* user = User::create(nick);
+		add(user);
+	}
+
+	void
+	UserList::remove(const QString& nick)
+	{
+		int idx = indexOf(nick);
+		if (idx > -1)
+			removeAt(idx);
+	}
+
+	int
+	UserList::indexOf(const QString& nick)
+	{
+		int ret = -1;
+		int size = count();
+		int left = 0;
+		int right = size - 1;
+
+		while (right > left)
+		{
+			int mid = (left + right) / 2;
+			User* curUser = at(mid);
+			if (nick == curUser->nick())
+				return mid;
+			if (nick < curUser->nick())
+				right = mid - 1;
+			else
+				left = mid + 1;
+		}
+		return ret;
+	}
+
+	User*
+	UserList::get(const QString& nick)
+	{
+		int idx = indexOf(nick);
+
+		if (idx < 0)
+			return NULL;
+		return at(idx);
+	}
+
+} // namespace com
