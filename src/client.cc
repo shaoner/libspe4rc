@@ -174,19 +174,10 @@ namespace com
 					emit onPrivateMessage(_userEvent);
 				}
 			}
-			else if (message.commandName == "NOTICE")
-			{
-				_userEvent->fill_in(message);
-				emit onNotice(_userEvent);
-			}
 			else if (message.commandName == "JOIN")
 			{
 				_channelEvent->fill_in(message);
-				if (_channelEvent->nick() == _nickname)
-				{
-					_channels.insert(_channelEvent->channel(), QList<QString>());
-				}
-				else
+				if ((_channelEvent->nick() == _nickname) && (_channels.contains(_channelEvent->channel())))
 				{
 					_channels[_channelEvent->channel()].append(_channelEvent->nick());
 				}
@@ -195,7 +186,34 @@ namespace com
 			else if (message.commandName == "PART")
 			{
 				_channelEvent->fill_in(message);
+				if (_channelEvent->nick() == _nickname)
+				{
+					_channels.remove(_channelEvent->channel());
+				}
 				emit onPart(_channelEvent);
+			}
+			else if (message.commandName == "MODE")
+			{
+				if (message.params.count() > 0 && message.params[0].startsWith('#'))
+				{
+					_channelEvent->fill_in(message);
+					emit onChannelMode(_channelEvent);
+				}
+				else
+				{
+					_userEvent->fill_in(message);
+					emit onUserMode(_userEvent);
+				}
+			}
+			else if (message.commandName == "QUIT")
+			{
+				_serverEvent->fill_in(message);
+				emit onQuit(_serverEvent);
+			}
+			else if (message.commandName == "NOTICE")
+			{
+				_userEvent->fill_in(message);
+				emit onNotice(_userEvent);
 			}
 			else
 			{
@@ -221,7 +239,7 @@ namespace com
 					if (_channels.contains(message.params[0]))
 					{
 						QStringList& users = _channels[message.params[0]];
-						users.sort();
+						// users.sort();
 						emit onUserList(message.params[0], users);
 					}
 					break;

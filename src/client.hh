@@ -52,12 +52,15 @@ namespace com
 		/// Event notifiers
 		void onError(ServerEvent* event);
 		void onConnect(ServerEvent* event);
+		void onPing(ServerEvent* event);
 		void onNotice(UserEvent* event);
 		void onChannelMessage(ChannelEvent* event);
 		void onPrivateMessage(UserEvent* event);
 		void onJoin(ChannelEvent* event);
 		void onPart(ChannelEvent* event);
-		void onPing(ServerEvent* event);
+		void onChannelMode(ChannelEvent* event);
+		void onUserMode(UserEvent* event);
+		void onQuit(ServerEvent* event);
 		void onRaw(RawEvent* event);
 		void onUserList(const QString& channel, QStringList& users);
 	private slots:
