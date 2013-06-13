@@ -3,28 +3,40 @@
 namespace com
 {
 
-	User::User(const QString& nick, const QString& prefix) :
-		_nick(nick),
-		_lowerNick(nick.toLower()),
-		_prefix(prefix)
+	User::User(const QString& fullnick) :
+		_fullnick(fullnick),
+		_nick(fullnick),
+		_roles(ROLE_NORMAL)
 	{
+		char prefix = fullnick[0].toAscii();
+		if ((prefix == '@') || (prefix == '%') || (prefix == '+'))
+		{
+			_roles = char_to_role(prefix);
+			_nick.remove(0, 1);
+		}
 	}
 
-	User::User(const QString& nick, QChar prefix) :
-		_nick(nick),
-		_lowerNick(nick.toLower()),
-		_prefix(prefix)
+	UserRole
+	User::char_to_role(char c)
 	{
+		switch (c)
+		{
+		case 0:
+			return ROLE_NORMAL;
+		case '@':
+			return ROLE_OP;
+		case '%':
+			return ROLE_HALFOP;
+		case '+':
+			return ROLE_VOICE;
+		}
+		return ROLE_OTHER;
 	}
 
-
-	User*
-	User::create(const QString& fullname)
+	const QString&
+	User::fullnick() const
 	{
-		QChar first = fullname[0];
-		if (first == '@' || first == '%' || first == '+')
-			return new User(QString(fullname).remove(0, 1), first);
-		return (new User(fullname));
+		return _fullnick;
 	}
 
 	const QString&
@@ -33,42 +45,48 @@ namespace com
 		return _nick;
 	}
 
-	const QString&
-	User::prefix() const
+	UserRole
+	User::roles() const
 	{
-		return _prefix;
+		return _roles;
+	}
+
+	void
+	User::add_role(UserRole role)
+	{
+		_roles = (UserRole)(_roles | role);
 	}
 
 	bool
 	User::is_op()
 	{
-		return _prefix.contains('@');
+		return (_roles & ROLE_OP) == ROLE_OP;
 	}
 
 	bool
 	User::is_halfop()
 	{
-		return _prefix.contains('%');
+		return (_roles & ROLE_HALFOP) == ROLE_HALFOP;
 	}
 
 	bool
 	User::is_voice()
 	{
-		return _prefix.contains('+');
+		return (_roles & ROLE_VOICE) == ROLE_VOICE;
 	}
 
 	bool
-	User::operator==(User* user) const
+	operator==(User& user1, User& user2)
 	{
-		return _lowerNick == user->nick().toLower();
+		return !QString::compare(user1.nick(), user2.nick(), Qt::CaseInsensitive);
 	}
 
 	bool
-	User::operator<(User* user) const
+	operator<(User& user1, User& user2)
 	{
-		if (_prefix == user->prefix())
-			return _lowerNick < user->nick().toLower();
-		return _prefix < user->prefix();
+		if (user1.roles() == user2.roles())
+			return QString::compare(user1.nick(), user2.nick(), Qt::CaseInsensitive) > 0;
+		return user1.roles() < user2.roles();
 	}
 
 } // namespace com

@@ -2,31 +2,42 @@
 # define COM_USER_HH
 
 # include <QString>
+# include <QDebug>
 
 namespace com
 {
+
+	enum UserRole
+	{
+		ROLE_NORMAL = 1,
+		ROLE_VOICE = 2,
+		ROLE_HALFOP = 4,
+		ROLE_OP = 5,
+		ROLE_OTHER = 6
+	};
 
 	class User
 	{
 	public:
 		/// Ctor
-		User(const QString& nick, const QString& prefix = "");
-		User(const QString& nick, QChar prefix);
+		User(const QString& fullnick);
 	public:
-		static User* create(const QString& fullname);
+		static UserRole char_to_role(char c);
 	public:
+		const QString& fullnick() const;
 		const QString& nick() const;
-		const QString& prefix() const;
+		UserRole roles() const;
+		void add_role(UserRole role);
 		bool is_op();
 		bool is_halfop();
 		bool is_voice();
 	public:
-		bool operator==(User* user) const;
-		bool operator<(User* user) const;
+		friend bool operator==(User& user1, User& user2);
+		friend bool operator<(User& user1, User& user2);
 	private:
+		QString _fullnick;
 		QString _nick;
-		QString _lowerNick;
-		QString _prefix;
+		UserRole _roles;
 	};
 
 } // namespace com

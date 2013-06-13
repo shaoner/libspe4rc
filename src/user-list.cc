@@ -25,23 +25,25 @@ namespace com
 		int right = size - 1;
 		int mid = 0;
 
-		while (right > left)
+		while (right >= left)
 		{
 			mid = (left + right) / 2;
 			User* curUser = at(mid);
-			if (user < curUser)
-				right = mid - 1;
-			else
+			if (*user < *curUser)
 				left = mid + 1;
+			else
+				right = mid - 1;
 		}
-		insert(mid, user);
+		if (left > right)
+			insert(left, user);
+		else
+			insert(right, user);
 	}
 
 	void
 	UserList::add(const QString& nick)
 	{
-		User* user = User::create(nick);
-		add(user);
+		add(new User(nick));
 	}
 
 	void
