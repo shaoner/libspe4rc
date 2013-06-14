@@ -18,6 +18,7 @@ namespace com
 		void add(User* user);
 		void add(const QString& nick);
 		void remove(const QString& nick);
+		void clear();
 		int indexOf(const QString& nick);
 		User* get(const QString& nick);
 	};

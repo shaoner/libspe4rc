@@ -9,12 +9,7 @@ namespace com
 
 	UserList::~UserList()
 	{
-		qDebug() << "delete first";
-		while (count() > 0)
-		{
-			delete takeFirst();
-		}
-		qDebug() << "delete end";
+		clear();
 	}
 
 	void
@@ -51,8 +46,16 @@ namespace com
 	{
 		int idx = indexOf(nick);
 		if (idx > -1)
-			removeAt(idx);
+			delete takeAt(idx);
 	}
+
+	void
+	UserList::clear()
+	{
+		while (count() > 0)
+			delete takeFirst();
+	}
+
 
 	int
 	UserList::indexOf(const QString& nick)
