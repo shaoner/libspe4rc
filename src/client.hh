@@ -55,11 +55,11 @@ namespace com
 		void onConnect(ServerEvent* event);
 		void onPing(ServerEvent* event);
 		void onNotice(UserEvent* event);
-		void onChannelMessage(ChannelEvent* event);
+		void onChannelMessage(UserEvent* event);
 		void onPrivateMessage(UserEvent* event);
-		void onJoin(ChannelEvent* event);
-		void onPart(ChannelEvent* event);
-		void onChannelMode(ChannelEvent* event);
+		void onJoin(UserEvent* event);
+		void onPart(UserEvent* event);
+		void onChannelMode(UserEvent* event);
 		void onUserMode(UserEvent* event);
 		void onQuit(ServerEvent* event);
 		void onRaw(RawEvent* event);
@@ -69,6 +69,8 @@ namespace com
 		void on_connect();
 		void on_irc_data(Message& message);
 	private:
+		void process_raw_data(Message& message);
+		void process_mode_channel(Message& message);
 		//void remove_user_from(QStringList& userList, QString& user);
 	private:
 		QString _hostname;
@@ -80,7 +82,6 @@ namespace com
 		QString _user;
 		QString _realname;
 		QHash<QString, UserList*> _channels;
-		ChannelEvent* _channelEvent;
 		UserEvent* _userEvent;
 		ServerEvent* _serverEvent;
 		RawEvent* _rawEvent;

@@ -14,7 +14,6 @@ namespace com
 		_altnickname(altnickname),
 		_user(user),
 		_realname(realname),
-		_channelEvent(new ChannelEvent()),
 		_userEvent(new UserEvent()),
 		_serverEvent(new ServerEvent()),
 		_rawEvent(new RawEvent())
@@ -23,7 +22,6 @@ namespace com
 		connect(this, SIGNAL(onConnect()), this, SLOT(on_connect()));
 		connect(this, SIGNAL(onIrcData(Message&)), this, SLOT(on_irc_data(Message&)));
 
-		_channelEvent->set_client(this);
 		_userEvent->set_client(this);
 		_serverEvent->set_client(this);
 		_rawEvent->set_client(this);
@@ -34,7 +32,6 @@ namespace com
 		delete _rawEvent;
 		delete _serverEvent;
 		delete _userEvent;
-		delete _channelEvent;
 	}
 
 	void
@@ -161,60 +158,53 @@ namespace com
 				emit onPing(_serverEvent);
 				write("PONG " + message.params[0]);
 			}
-			else if (message.commandName == "PRIVMSG")
-			{
-				if (message.params.count() > 0 && message.params[0].startsWith('#'))
-				{
-					_channelEvent->fill_in(message);
-					emit onChannelMessage(_channelEvent);
-				}
-				else
-				{
-					_userEvent->fill_in(message);
-					emit onPrivateMessage(_userEvent);
-				}
-			}
-			else if (message.commandName == "JOIN")
-			{
-				_channelEvent->fill_in(message);
-				if ((_channelEvent->nick() != _nickname) && (_channels.contains(_channelEvent->channel())))
-					_channels[_channelEvent->channel()]->add(_channelEvent->nick());
-				emit onJoin(_channelEvent);
-			}
-			else if (message.commandName == "PART")
-			{
-				_channelEvent->fill_in(message);
-				if (_channelEvent->nick() == _nickname)
-					delete _channels.take(_channelEvent->channel());
-				else if (_channels.contains(_channelEvent->channel()))
-					_channels[_channelEvent->channel()]->remove(_channelEvent->nick());
-				emit onPart(_channelEvent);
-			}
-			else if (message.commandName == "MODE")
-			{
-				if (message.params.count() > 0 && message.params[0].startsWith('#'))
-				{
-					_channelEvent->fill_in(message);
-					emit onChannelMode(_channelEvent);
-				}
-				else
-				{
-					_userEvent->fill_in(message);
-					emit onUserMode(_userEvent);
-				}
-			}
 			else if (message.commandName == "QUIT")
 			{
 				_serverEvent->fill_in(message);
-				foreach(UserList* users, _channels)
+				// Remove the user from each channel list
+				if (_serverEvent->nick() != _nickname)
 				{
-					users->remove(_serverEvent->nick());
+					foreach(UserList* users, _channels)
+					{
+						users->remove(_serverEvent->nick());
+					}
 				}
-
-				if (_channelEvent->nick() == _nickname)
-					delete _channels.take(_channelEvent->channel());
-
+				else // Remove all channels, which includes deleting each user
+				{
+					while (_channels.count() > 0)
+						delete _channels.take(_userEvent->target());
+				}
 				emit onQuit(_serverEvent);
+			}
+
+			else if (message.commandName == "PRIVMSG")
+			{
+				_userEvent->fill_in(message);
+				if (_userEvent->target().startsWith('#'))
+					emit onChannelMessage(_userEvent);
+				else
+					emit onPrivateMessage(_userEvent);
+			}
+			else if (message.commandName == "JOIN")
+			{
+				_userEvent->fill_in(message);
+				if ((_userEvent->nick() != _nickname) && (_channels.contains(_userEvent->target())))
+					_channels[_userEvent->target()]->add(_userEvent->nick());
+				emit onJoin(_userEvent);
+			}
+			else if (message.commandName == "PART")
+			{
+				_userEvent->fill_in(message);
+				if (_userEvent->nick() == _nickname)
+					delete _channels.take(_userEvent->target());
+				else if (_channels.contains(_userEvent->target()))
+					_channels[_userEvent->target()]->remove(_userEvent->nick());
+				emit onPart(_userEvent);
+			}
+			else if (message.commandName == "MODE")
+			{
+				_userEvent->fill_in(message);
+				process_mode_channel(message);
 			}
 			else if (message.commandName == "NOTICE")
 			{
@@ -227,40 +217,90 @@ namespace com
 			}
 		}
 		else // message.commandType == Message::MSG_RAWNUM
+			process_raw_data(message);
+	}
+
+	void
+	Client::process_mode_channel(Message& message)
+	{
+		// const QString& modes = _userEvent->args()[0];
+		// const QStringList& modeArgs = _userEvent->args()[1].split(' ');
+		// int argIdx = 1;
+		// bool add = false;
+
+		// for (int i = 0, len = modes.size(); i < len; ++i)
+		// {
+		// 	if (modes[i] == '+')
+		// 		add = true;
+		// 	else if (modes[i] == '-')
+		// 		add = false;
+		// 	else if (modes[i] == 'o')
+		// 	{
+		// 		const QString& target = modeArgs[argIdx];
+		// 		// User* user = NULL;
+		// 		// if _channels[_userEvent->target()]
+
+		// 		// if (add)
+		// 		// {
+		// 		// }
+		// 	}
+
+		// }
+
+
+		if (_userEvent->target().startsWith('#'))
 		{
-			_rawEvent->fill_in(message);
-			switch (_rawEvent->raw())
-			{
-				case RPL_NAMREPLY:
-				{
-					const QStringList& nicks = message.params[2].split(" ");
-					UserList* users = NULL;
-					if (_channels.contains(message.params[1]))
-						users = _channels[message.params[1]];
-					else
-					{
-						users = new UserList();
-						_channels.insert(message.params[1], users);
-					}
-					foreach(QString nick, nicks)
-					{
-						users->add(nick);
-					}
-					break;
-				}
-				case RPL_ENDOFNAMES:
-				{
-					if (_channels.contains(message.params[0]))
-					{
-					 	UserList* users = _channels[message.params[0]];
-						// 	// users.sort();
-					 	emit onUserList(message.params[0], users);
-					}
-					break;
-				}
-			}
-			emit onRaw(_rawEvent);
+			emit onChannelMode(_userEvent);
 		}
+		else
+			emit onUserMode(_userEvent);
+	}
+
+	void
+	Client::process_raw_data(Message& message)
+	{
+		static bool start_name_rpl = true;
+		_rawEvent->fill_in(message);
+		switch (_rawEvent->raw())
+		{
+			// Handle NAME command
+			case RPL_NAMREPLY:
+			{
+				const QStringList& nicks = message.params[2].split(" ");
+				UserList* users = NULL;
+				if (_channels.contains(message.params[1]))
+				{
+					users = _channels[message.params[1]];
+					if (start_name_rpl)
+					{
+						users->clear();
+						start_name_rpl = false;
+					}
+				}
+				else
+				{
+					users = new UserList();
+					_channels.insert(message.params[1], users);
+				}
+				foreach(QString nick, nicks)
+				{
+					users->add(nick);
+				}
+				break;
+			}
+			case RPL_ENDOFNAMES:
+			{
+				if (_channels.contains(message.params[0]))
+				{
+					UserList* users = _channels[message.params[0]];
+					// 	// users.sort();
+					emit onUserList(message.params[0], users);
+					start_name_rpl = true;
+				}
+				break;
+			}
+		}
+		emit onRaw(_rawEvent);
 	}
 
 	// void
