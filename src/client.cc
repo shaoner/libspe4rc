@@ -21,7 +21,6 @@ namespace com
 	{
 		connect(this, SIGNAL(onConnect()), this, SLOT(on_connect()));
 		connect(this, SIGNAL(onIrcData(Message&)), this, SLOT(on_irc_data(Message&)));
-
 		_userEvent->set_client(this);
 		_serverEvent->set_client(this);
 		_rawEvent->set_client(this);
@@ -223,29 +222,38 @@ namespace com
 	void
 	Client::process_mode_channel(Message& message)
 	{
-		// const QString& modes = _userEvent->args()[0];
-		// const QStringList& modeArgs = _userEvent->args()[1].split(' ');
-		// int argIdx = 1;
-		// bool add = false;
+		const QString& modes = _userEvent->args()[0];
+		const QStringList& modeArgs = _userEvent->args()[1].split(' ');
+		int argIdx = 0;
+		bool add = false;
+		char prefix;
+		Role* roleHandler = Role::get();
 
-		// for (int i = 0, len = modes.size(); i < len; ++i)
-		// {
-		// 	if (modes[i] == '+')
-		// 		add = true;
-		// 	else if (modes[i] == '-')
-		// 		add = false;
-		// 	else if (modes[i] == 'o')
-		// 	{
-		// 		const QString& target = modeArgs[argIdx];
-		// 		// User* user = NULL;
-		// 		// if _channels[_userEvent->target()]
+		for (int i = 0, len = modes.size(); i < len; ++i)
+		{
+			if (modes[i] == '+')
+				add = true;
+			else if (modes[i] == '-')
+				add = false;
+			else if (((prefix = roleHandler->from_mode(modes[i].toAscii())) != 0) &&
+					 (modeArgs.count() > argIdx) &&
+					 (_channels.contains(_userEvent->target())))
+			{
+				const QString& target = modeArgs[argIdx];
+				User* user = _channels[_userEvent->target()]->get(target);
+				if (user)
+				{
+					if (add)
+					 	user->add_prefix(prefix);
+					else
+					 	user->del_prefix(prefix);
+				}
+				// if (add)
+				// {
+				// }
+			}
 
-		// 		// if (add)
-		// 		// {
-		// 		// }
-		// 	}
-
-		// }
+		}
 
 
 		if (_userEvent->target().startsWith('#'))
@@ -263,6 +271,12 @@ namespace com
 		_rawEvent->fill_in(message);
 		switch (_rawEvent->raw())
 		{
+			// Get server parameters
+			case RPL_BOUNCE:
+			{
+				process_server_params(message.params);
+				break;
+			}
 			// Handle NAME command
 			case RPL_NAMREPLY:
 			{
@@ -301,6 +315,32 @@ namespace com
 			}
 		}
 		emit onRaw(_rawEvent);
+	}
+
+	void
+	Client::process_server_params(const QStringList& serverParams)
+	{
+
+		for (QStringList::const_iterator it = serverParams.begin(),
+				 end = serverParams.end(); it != end; ++it)
+		{
+			const QStringList& params = it->split('=');
+			if (params[0] == "PREFIX")
+			{
+				const QStringList& prefixes = params[1].split(')');
+				const QString& modes = prefixes[0];
+				const QString& chars = prefixes[1];
+				Role* roleHandler = Role::get();
+				quint8 level = 1;
+				for (int i = modes.size() - 1; i > 0; --i)
+				{
+					char cmode = modes[i].toAscii();
+					char cprefix = chars[i - 1].toAscii();
+					roleHandler->add(cmode, cprefix, level);
+					level <<= 1;
+				}
+			}
+		}
 	}
 
 	// void

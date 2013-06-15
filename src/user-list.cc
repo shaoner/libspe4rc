@@ -38,13 +38,15 @@ namespace com
 	void
 	UserList::add(const QString& nick)
 	{
-		add(new User(nick));
+		User* user = new User(nick);
+		add(user);
+		connect(user, SIGNAL(onChangeNick(User*)), this, SLOT(on_change_nick(User*)));
 	}
 
 	void
 	UserList::remove(const QString& nick)
 	{
-		int idx = indexOf(nick);
+		int idx = index_of(nick);
 		if (idx > -1)
 			delete takeAt(idx);
 	}
@@ -56,15 +58,13 @@ namespace com
 			delete takeFirst();
 	}
 
-
 	int
-	UserList::indexOf(const QString& nick)
+	UserList::index_of(const QString& nick)
 	{
 		int ret = -1;
 		int size = count();
 		int left = 0;
 		int right = size - 1;
-
 		while (right > left)
 		{
 			int mid = (left + right) / 2;
@@ -82,11 +82,17 @@ namespace com
 	User*
 	UserList::get(const QString& nick)
 	{
-		int idx = indexOf(nick);
-
+		int idx = index_of(nick);
 		if (idx < 0)
 			return NULL;
 		return at(idx);
+	}
+
+	void
+	UserList::on_change_nick(User* user)
+	{
+		if (removeOne(user))
+			add(user);
 	}
 
 } // namespace com

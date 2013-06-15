@@ -5,32 +5,25 @@ namespace com
 
 	User::User(const QString& fullnick) :
 		_fullnick(fullnick),
-		_nick(fullnick),
-		_roles(ROLE_NORMAL)
+		_nick(fullnick)
 	{
-		char prefix = fullnick[0].toAscii();
-		if ((prefix == '@') || (prefix == '%') || (prefix == '+'))
-		{
-			_roles = char_to_role(prefix);
+		_prefix = fullnick[0].toAscii();
+		_roles = Role::get()->from_prefix(_prefix);
+		if (_roles)
 			_nick.remove(0, 1);
-		}
+		else
+			_prefix = 0;
 	}
 
-	UserRole
-	User::char_to_role(char c)
+	void
+	User::change_nick(const QString& nick)
 	{
-		switch (c)
-		{
-		case 0:
-			return ROLE_NORMAL;
-		case '@':
-			return ROLE_OP;
-		case '%':
-			return ROLE_HALFOP;
-		case '+':
-			return ROLE_VOICE;
-		}
-		return ROLE_OTHER;
+		_nick = nick;
+		if (_roles)
+			_fullnick = _prefix + _nick;
+		else
+			_fullnick = _nick;
+		emit onChangeNick(this);
 	}
 
 	const QString&
@@ -45,48 +38,81 @@ namespace com
 		return _nick;
 	}
 
-	UserRole
+	quint8
 	User::roles() const
 	{
 		return _roles;
 	}
 
 	void
-	User::add_role(UserRole role)
+	User::add_prefix(char prefix)
 	{
-		_roles = (UserRole)(_roles | role);
+		quint8 role = Role::get()->from_prefix(prefix);
+  		if (role > _roles)
+		{
+			_prefix = prefix;
+			if (_roles)
+				_fullnick.replace(0, 1, _prefix);
+			else
+				_fullnick.prepend(_prefix);
+		}
+		_roles |= role;
+		emit onChangeNick(this);
+	}
+
+	void
+	User::del_prefix(char prefix)
+	{
+		quint8 delRole = Role::get()->from_prefix(prefix);
+		quint8 oldRole = _roles;
+		_roles -= delRole;
+		if (delRole > _roles)
+		{
+			char newPrefix = Role::get()->to_prefix(uint8_msb(_roles));
+			_prefix = newPrefix;
+			if (!_prefix)
+				_fullnick = _nick;
+			else if (oldRole)
+				_fullnick.replace(0, 1, _prefix);
+			else
+				_fullnick.prepend(_prefix);
+		}
+		emit onChangeNick(this);
 	}
 
 	bool
 	User::is_op()
 	{
-		return (_roles & ROLE_OP) == ROLE_OP;
+		return _prefix == '@';
 	}
 
 	bool
 	User::is_halfop()
 	{
-		return (_roles & ROLE_HALFOP) == ROLE_HALFOP;
+		return _prefix == '%';
 	}
 
 	bool
 	User::is_voice()
 	{
-		return (_roles & ROLE_VOICE) == ROLE_VOICE;
+		return _prefix == '+';
 	}
 
 	bool
 	operator==(User& user1, User& user2)
 	{
-		return !QString::compare(user1.nick(), user2.nick(), Qt::CaseInsensitive);
+		return !QString::compare(user1._nick, user2._nick, Qt::CaseInsensitive);
 	}
 
 	bool
 	operator<(User& user1, User& user2)
 	{
-		if (user1.roles() == user2.roles())
-			return QString::compare(user1.nick(), user2.nick(), Qt::CaseInsensitive) > 0;
-		return user1.roles() < user2.roles();
+		quint8 r1 = uint8_msb(user1._roles);
+		quint8 r2 = uint8_msb(user2._roles);
+
+		if (r1 == r2)
+			return QString::compare(user1._nick, user2._nick, Qt::CaseInsensitive) > 0;
+		return r1 < r2;
 	}
 
 } // namespace com

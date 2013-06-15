@@ -5,6 +5,7 @@
 # include <QString>
 # include <QHash>
 
+# include <role.hh>
 # include <user-list.hh>
 # include <channel-event.hh>
 # include <user-event.hh>
@@ -69,8 +70,9 @@ namespace com
 		void on_connect();
 		void on_irc_data(Message& message);
 	private:
-		void process_raw_data(Message& message);
 		void process_mode_channel(Message& message);
+		void process_raw_data(Message& message);
+		void process_server_params(const QStringList& serverParams);
 		//void remove_user_from(QStringList& userList, QString& user);
 	private:
 		QString _hostname;

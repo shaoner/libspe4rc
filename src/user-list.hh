@@ -9,8 +9,11 @@
 namespace com
 {
 
-	class UserList : public QList<User*>
+	class UserList : public QObject, public QList<User*>
 	{
+
+		Q_OBJECT
+
 	public:
 		explicit UserList();
 		~UserList();
@@ -19,8 +22,10 @@ namespace com
 		void add(const QString& nick);
 		void remove(const QString& nick);
 		void clear();
-		int indexOf(const QString& nick);
+		int index_of(const QString& nick);
 		User* get(const QString& nick);
+	private slots:
+		void on_change_nick(User*);
 	};
 
 } // namespace com

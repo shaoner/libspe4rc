@@ -25,6 +25,7 @@ HEADERS += src/channel-event.hh \
     src/message.hh \
     src/parser.hh \
     src/raw-event.hh \
+	src/role.hh \
     src/server-event.hh \
 	src/user.hh \
     src/user-event.hh \
@@ -38,6 +39,7 @@ SOURCES += src/channel-event.cc \
     src/message.cc \
     src/parser.cc \
     src/raw-event.cc \
+	src/role.cc \
     src/server-event.cc \
 	src/user.cc \
     src/user-event.cc \
