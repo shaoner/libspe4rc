@@ -66,6 +66,8 @@ namespace com
 		void onRaw(RawEvent* event);
 		void onUserList(const QString& channel, UserList* users);
 		void onNick(UserEvent* event);
+		void onTopic(const QString& channel, const QString& topic);
+		void onTopicInfo(const QString& channel, const QString& author, uint date);
 	private slots:
 		/// Socket event listeners
 		void on_connect();

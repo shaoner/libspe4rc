@@ -326,6 +326,18 @@ namespace com
 				}
 				break;
 			}
+			case RPL_TOPIC:
+			{
+				if (message.params.count() > 1)
+					emit onTopic(message.params[0], message.params[1]);
+				break;
+			}
+			case RPL_TOPICINFO:
+			{
+				if (message.params.count() > 2)
+					emit onTopicInfo(message.params[0], message.params[1], message.params[2].toUInt());
+				break;
+			}
 		}
 		emit onRaw(_rawEvent);
 	}
