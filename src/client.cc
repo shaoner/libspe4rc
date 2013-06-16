@@ -194,11 +194,11 @@ namespace com
 			else if (message.commandName == "PART")
 			{
 				_userEvent->fill_in(message);
+				emit onPart(_userEvent);
 				if (_userEvent->nick() == _nickname)
 					delete _channels.take(_userEvent->target());
 				else if (_channels.contains(_userEvent->target()))
 					_channels[_userEvent->target()]->remove(_userEvent->nick());
-				emit onPart(_userEvent);
 			}
 			else if (message.commandName == "MODE")
 			{
