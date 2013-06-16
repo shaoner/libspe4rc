@@ -8,13 +8,15 @@
 
 namespace com
 {
+
+	class UserList;
+
     class User : public QObject
 	{
 		Q_OBJECT
-
 	public:
-		/// Ctor
-		User(const QString& fullnick);
+		/// Dtor
+		~User();
 	public:
 		void change_nick(const QString& nick);
 		const QString& fullnick() const;
@@ -29,7 +31,13 @@ namespace com
 		friend bool operator==(User& user1, User& user2);
 		friend bool operator<(User& user1, User& user2);
 	signals:
-        void onChangeNick(User*);
+		void onChangeNick(User*, const QString&);
+		void onChangeFullNick(const QString&);
+	private:
+		/// Ctor
+		User(const QString& fullnick);
+		void set_nick(const QString& nick);
+		friend UserList;
 	private:
 		QString _fullnick;
 		QString _nick;

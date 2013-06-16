@@ -24,7 +24,7 @@ namespace com
 		{
 			mid = (left + right) / 2;
 			User* curUser = at(mid);
-			if (*user < *curUser)
+			if (user->nick().compare(curUser->nick(), Qt::CaseInsensitive) > 0)
 				left = mid + 1;
 			else
 				right = mid - 1;
@@ -40,7 +40,7 @@ namespace com
 	{
 		User* user = new User(nick);
 		add(user);
-		connect(user, SIGNAL(onChangeNick(User*)), this, SLOT(on_change_nick(User*)));
+		connect(user, SIGNAL(onChangeNick(User*, const QString&)), this, SLOT(on_change_nick(User*, const QString&)));
 	}
 
 	void
@@ -65,16 +65,16 @@ namespace com
 		int size = count();
 		int left = 0;
 		int right = size - 1;
-		while (right > left)
+		while (right >= left)
 		{
 			int mid = (left + right) / 2;
 			User* curUser = at(mid);
 			if (nick == curUser->nick())
 				return mid;
-			if (nick < curUser->nick())
-				right = mid - 1;
-			else
+			if (nick.compare(curUser->nick(), Qt::CaseInsensitive) > 0)
 				left = mid + 1;
+			else
+				right = mid - 1;
 		}
 		return ret;
 	}
@@ -89,10 +89,15 @@ namespace com
 	}
 
 	void
-	UserList::on_change_nick(User* user)
+	UserList::on_change_nick(User* user, const QString& nick)
 	{
-		if (removeOne(user))
+		int idx = index_of(user->nick());
+		if (idx > -1)
+		{
+			removeAt(idx);
+			user->set_nick(nick);
 			add(user);
+		}
 	}
 
 } // namespace com

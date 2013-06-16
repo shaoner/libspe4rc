@@ -205,6 +205,19 @@ namespace com
 				_userEvent->fill_in(message);
 				process_mode_channel(message);
 			}
+			else if (message.commandName == "NICK")
+			{
+				_userEvent->fill_in(message);
+				emit onNick(_userEvent);
+				foreach(UserList* users, _channels)
+				{
+					User* user = users->get(_userEvent->nick());
+					if (user)
+						user->change_nick(_userEvent->target());
+				}
+				if (_userEvent->nick() == _nickname)
+					_nickname = _userEvent->target();
+			}
 			else if (message.commandName == "NOTICE")
 			{
 				_userEvent->fill_in(message);

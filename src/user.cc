@@ -15,15 +15,25 @@ namespace com
 			_prefix = 0;
 	}
 
+	User::~User()
+	{
+	}
+
 	void
 	User::change_nick(const QString& nick)
 	{
-		_nick = nick;
 		if (_roles)
-			_fullnick = _prefix + _nick;
+			_fullnick = _prefix + nick;
 		else
-			_fullnick = _nick;
-		emit onChangeNick(this);
+			_fullnick = nick;
+		emit onChangeNick(this, nick);
+		emit onChangeFullNick(nick);
+	}
+
+	void
+	User::set_nick(const QString& nick)
+	{
+		_nick = nick;
 	}
 
 	const QString&
@@ -55,9 +65,9 @@ namespace com
 				_fullnick.replace(0, 1, _prefix);
 			else
 				_fullnick.prepend(_prefix);
+			emit onChangeFullNick(_nick);
 		}
 		_roles |= role;
-		emit onChangeNick(this);
 	}
 
 	void
@@ -76,8 +86,8 @@ namespace com
 				_fullnick.replace(0, 1, _prefix);
 			else
 				_fullnick.prepend(_prefix);
+			emit onChangeFullNick(_nick);
 		}
-		emit onChangeNick(this);
 	}
 
 	bool

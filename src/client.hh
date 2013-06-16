@@ -65,6 +65,7 @@ namespace com
 		void onQuit(ServerEvent* event);
 		void onRaw(RawEvent* event);
 		void onUserList(const QString& channel, UserList* users);
+		void onNick(UserEvent* event);
 	private slots:
 		/// Socket event listeners
 		void on_connect();

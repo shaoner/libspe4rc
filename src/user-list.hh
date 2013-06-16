@@ -25,7 +25,7 @@ namespace com
 		int index_of(const QString& nick);
 		User* get(const QString& nick);
 	private slots:
-		void on_change_nick(User*);
+		void on_change_nick(User* user, const QString& newNick);
 	};
 
 } // namespace com
