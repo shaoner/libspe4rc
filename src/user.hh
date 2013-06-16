@@ -22,9 +22,9 @@ namespace com
 		quint8 roles() const;
 		void add_prefix(char prefix);
 		void del_prefix(char prefix);
-		bool is_op();
-		bool is_halfop();
-		bool is_voice();
+		bool is_op() const;
+		bool is_halfop() const;
+		bool is_voice() const;
 	public:
 		friend bool operator==(User& user1, User& user2);
 		friend bool operator<(User& user1, User& user2);

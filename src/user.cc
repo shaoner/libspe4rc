@@ -81,21 +81,24 @@ namespace com
 	}
 
 	bool
-	User::is_op()
+	User::is_op() const
 	{
-		return _prefix == '@';
+		static quint8 opRole = Role::get()->from_prefix('@');
+		return (_roles & opRole) == opRole;
 	}
 
 	bool
-	User::is_halfop()
+	User::is_halfop() const
 	{
-		return _prefix == '%';
+		static quint8 halfopRole = Role::get()->from_prefix('%');
+		return (_roles & halfopRole) == halfopRole;
 	}
 
 	bool
-	User::is_voice()
+	User::is_voice() const
 	{
-		return _prefix == '+';
+		static quint8 voiceRole = Role::get()->from_prefix('%');
+		return (_roles & voiceRole) == voiceRole;
 	}
 
 	bool
