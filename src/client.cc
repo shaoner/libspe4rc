@@ -261,14 +261,9 @@ namespace com
 					else
 					 	user->del_prefix(prefix);
 				}
-				// if (add)
-				// {
-				// }
 			}
 
 		}
-
-
 		if (_userEvent->target().startsWith('#'))
 		{
 			emit onChannelMode(_userEvent);
@@ -367,11 +362,5 @@ namespace com
 			}
 		}
 	}
-
-	// void
-	// Client::remove_user_from(QStringList& userList, QString& user)
-	// {
-	// 	//while (user[0]
-	// }
 
 } // namespace com
