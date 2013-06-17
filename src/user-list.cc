@@ -19,9 +19,11 @@ namespace com
 		int left = 0;
 		int right = size - 1;
 		int mid = 0;
-
+		// The user is inserted in an alpha sorted list
 		while (right >= left)
 		{
+			// We reduce the left and the right marker
+			// until we find the right place to insert the user
 			mid = (left + right) / 2;
 			User* curUser = at(mid);
 			if (user->nick().compare(curUser->nick(), Qt::CaseInsensitive) > 0)
@@ -40,7 +42,10 @@ namespace com
 	{
 		User* user = new User(nick);
 		add(user);
-		connect(user, SIGNAL(onChangeNick(User*, const QString&)), this, SLOT(on_change_nick(User*, const QString&)));
+		// When the user's nickname changes,
+		// we need to re-insert it at the right position
+		connect(user, SIGNAL(onChangeNick(User*, const QString&)),
+				this, SLOT(on_change_nick(User*, const QString&)));
 	}
 
 	void
@@ -65,6 +70,7 @@ namespace com
 		int size = count();
 		int left = 0;
 		int right = size - 1;
+		// Simple dichotomic search
 		while (right >= left)
 		{
 			int mid = (left + right) / 2;
@@ -91,9 +97,11 @@ namespace com
 	void
 	UserList::on_change_nick(User* user, const QString& nick)
 	{
+		// The user's nickname has changed
 		int idx = index_of(user->nick());
 		if (idx > -1)
 		{
+			// We remove it and re-insert it
 			removeAt(idx);
 			user->set_nick(nick);
 			add(user);

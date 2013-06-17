@@ -1,3 +1,9 @@
+/*!
+ * \file client.hh
+ * \author shaoner
+ * \brief An IRC session
+ */
+
 #ifndef COM_CLIENT_HH
 # define COM_CLIENT_HH
 
@@ -11,12 +17,16 @@
 # include <raw-event.hh>
 # include <connector.hh>
 
-namespace com
-{
-
 /// The default IRC port
 # define DEFAULT_PORT 6667
 
+namespace com
+{
+
+	/*!
+	 * \class Client
+	 * \brief This class is an IRC client session
+	 */
 	class Client : public Connector
 	{
 		Q_OBJECT

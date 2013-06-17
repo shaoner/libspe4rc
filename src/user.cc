@@ -3,37 +3,8 @@
 namespace com
 {
 
-	User::User(const QString& fullnick) :
-		_fullnick(fullnick),
-		_nick(fullnick)
-	{
-		_prefix = fullnick[0].toAscii();
-		_roles = Role::get()->from_prefix(_prefix);
-		if (_roles)
-			_nick.remove(0, 1);
-		else
-			_prefix = 0;
-	}
-
 	User::~User()
 	{
-	}
-
-	void
-	User::change_nick(const QString& nick)
-	{
-		if (_roles)
-			_fullnick = _prefix + nick;
-		else
-			_fullnick = nick;
-		emit onChangeNick(this, nick);
-		emit onChangeFullNick(nick);
-	}
-
-	void
-	User::set_nick(const QString& nick)
-	{
-		_nick = nick;
 	}
 
 	const QString&
@@ -55,12 +26,25 @@ namespace com
 	}
 
 	void
+	User::change_nick(const QString& nick)
+	{
+		if (_roles)
+			_fullnick = _prefix + nick;
+		else
+			_fullnick = nick;
+		emit onChangeNick(this, nick);
+		emit onChangeFullNick(nick);
+	}
+
+	void
 	User::add_prefix(char prefix)
 	{
 		quint8 role = Role::get()->from_prefix(prefix);
   		if (role > _roles)
 		{
 			_prefix = prefix;
+			// If there already is a prefix, we replace it
+			// Otherwise, we prepend it
 			if (_roles)
 				_fullnick.replace(0, 1, _prefix);
 			else
@@ -76,6 +60,7 @@ namespace com
 		quint8 delRole = Role::get()->from_prefix(prefix);
 		quint8 oldRole = _roles;
 		_roles -= delRole;
+		// Change the fullnick when the highest role is removed
 		if (delRole > _roles)
 		{
 			char newPrefix = Role::get()->to_prefix(uint8_msb(_roles));
@@ -126,6 +111,25 @@ namespace com
 		if (r1 == r2)
 			return QString::compare(user1._nick, user2._nick, Qt::CaseInsensitive) > 0;
 		return r1 < r2;
+	}
+
+	User::User(const QString& fullnick) :
+		_fullnick(fullnick),
+		_nick(fullnick)
+	{
+		_prefix = fullnick[0].toAscii();
+		_roles = Role::get()->from_prefix(_prefix);
+		// The nick does not contain the prefix
+		if (_roles)
+			_nick.remove(0, 1);
+		else
+			_prefix = 0;
+	}
+
+	void
+	User::set_nick(const QString& nick)
+	{
+		_nick = nick;
 	}
 
 } // namespace com

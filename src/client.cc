@@ -123,6 +123,7 @@ namespace com
 	void
 	Client::on_socket_connect()
 	{
+		// Send IRC auth
 		if (!_password.isEmpty())
 			write("PASS " + _password);
 		write("NICK " + _nickname);
@@ -261,6 +262,8 @@ namespace com
 
 		for (int i = 0, len = modes.size(); i < len; ++i)
 		{
+			// Keep last symbol + / -
+			// because we can set modes like this: +no-h+v
 			if (modes[i] == '+')
 				add = true;
 			else if (modes[i] == '-')
@@ -341,12 +344,14 @@ namespace com
 				startNameRpl = false;
 				break;
 			}
+			// Topic subject
 			case RPL_TOPIC:
 			{
 				if (message.params.count() > 1)
 					emit onTopic(message.params[0], message.params[1]);
 				break;
 			}
+			// Topic additional infos
 			case RPL_TOPICINFO:
 			{
 				if (message.params.count() > 2)
@@ -360,11 +365,12 @@ namespace com
 	void
 	Client::process_server_params(const QStringList& serverParams)
 	{
-
+		// Parse server specific parameters
 		for (QStringList::const_iterator it = serverParams.begin(),
 				 end = serverParams.end(); it != end; ++it)
 		{
 			const QStringList& params = it->split('=');
+			// Get prefix handled by this server
 			if (params[0] == "PREFIX")
 			{
 				const QStringList& prefixes = params[1].split(')');
@@ -372,6 +378,9 @@ namespace com
 				const QString& chars = prefixes[1];
 				Role* roleHandler = Role::get();
 				quint8 level = 1;
+				// modes are the letter modes
+				// chars are the prefix associated to the mode
+				// 'o' letter is usually associated to '@' prefix
 				for (int i = modes.size() - 1; i > 0; --i)
 				{
 					char cmode = modes[i].toAscii();

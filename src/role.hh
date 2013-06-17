@@ -1,3 +1,9 @@
+/*!
+ * \file role.hh
+ * \author shaoner
+ * \brief An IRC channel role helper
+ */
+
 #ifndef COM_ROLE_HH
 # define COM_ROLE_HH
 
@@ -7,6 +13,10 @@
 namespace com
 {
 
+	/*!
+	 * \class Role
+	 * \brief This class dynamicly handles IRC channel roles
+	 */
 	class Role
 	{
 	public:

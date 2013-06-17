@@ -12,9 +12,6 @@
 namespace com
 {
 
-/// Define the number of event listener's types
-# define N_EVENTS 11
-
 	class Client;
 
 	/*!

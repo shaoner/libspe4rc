@@ -1,3 +1,9 @@
+/*!
+ * \file command-event.hh
+ * \author shaoner
+ * \brief IRC event command
+ */
+
 #ifndef COM_COMMAND_EVENT_HH
 # define COM_COMMAND_EVENT_HH
 
@@ -12,6 +18,7 @@ namespace com
 	class CommandEvent : public Event
 	{
 	public:
+		/// Ctor
 		CommandEvent(Message& message, Client* session);
 	public:
 		/// Get client info
