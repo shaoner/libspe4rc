@@ -48,9 +48,9 @@ namespace com
 		/// Set the connection status
 		void connected(bool connected);
 	signals:
-		void onConnect();
+		void onSocketConnect();
 		void onIrcData(Message& message);
-		void onDisconnect();
+		void onSocketDisconnect();
 	protected:
 		/// Connect to hostname and port
 		ConnectError open(const QString& hostname, int port) const;

@@ -7,9 +7,7 @@
 
 # include <role.hh>
 # include <user-list.hh>
-# include <channel-event.hh>
-# include <user-event.hh>
-# include <server-event.hh>
+# include <command-event.hh>
 # include <raw-event.hh>
 # include <connector.hh>
 
@@ -52,31 +50,40 @@ namespace com
 		quint16 port() const;
 	signals:
 		/// Event notifiers
-		void onError(ServerEvent* event);
-		void onConnect(ServerEvent* event);
-		void onPing(ServerEvent* event);
-		void onNotice(UserEvent* event);
-		void onChannelMessage(UserEvent* event);
-		void onPrivateMessage(UserEvent* event);
-		void onJoin(UserEvent* event);
-		void onPart(UserEvent* event);
-		void onChannelMode(UserEvent* event);
-		void onUserMode(UserEvent* event);
-		void onQuit(ServerEvent* event);
-		void onRaw(RawEvent* event);
+		void onError();
+		void onConnect();
+		void onDisconnect();
+
+		void onPing(CommandEvent& event, const QString& server);
+		void onQuit(CommandEvent& event, const QString& reason);
+
+		void onChannelMessage(CommandEvent& event, const QString& target, const QString& msg);
+		void onPrivateMessage(CommandEvent& event, const QString& target, const QString& msg);
+
+		void onJoin(CommandEvent& event, const QString& channel);
+		void onPart(CommandEvent& event, const QString& channel, const QString& reason);
+
+		void onUserMode(CommandEvent& event, const QString& target, const QString& modes);
+		void onChannelMode(CommandEvent& event, const QString& channel, const QString& modes, const QStringList& args);
+		void onNick(CommandEvent& event, const QString& newNick);
+
+		void onNotice(CommandEvent& event, const QString& target, const QString& msg);
+
+
+		void onRaw(RawEvent& event);
 		void onUserList(const QString& channel, UserList* users);
-		void onNick(UserEvent* event);
+
 		void onTopic(const QString& channel, const QString& topic);
 		void onTopicInfo(const QString& channel, const QString& author, uint date);
 	private slots:
 		/// Socket event listeners
-		void on_connect();
+		void on_socket_connect();
+		void on_socket_disconnect();
 		void on_irc_data(Message& message);
 	private:
-		void process_mode_channel(Message& message);
+		void process_mode_channel(CommandEvent& event, const QString& channel, const QString& modes, const QStringList& args);
 		void process_raw_data(Message& message);
 		void process_server_params(const QStringList& serverParams);
-		//void remove_user_from(QStringList& userList, QString& user);
 	private:
 		QString _hostname;
 		int _port;
@@ -87,9 +94,6 @@ namespace com
 		QString _user;
 		QString _realname;
 		QHash<QString, UserList*> _channels;
-		UserEvent* _userEvent;
-		ServerEvent* _serverEvent;
-		RawEvent* _rawEvent;
 	};
 
 } // namespace com

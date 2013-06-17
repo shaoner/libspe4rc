@@ -2,6 +2,14 @@
 
 namespace com
 {
+	CommandEvent::CommandEvent(Message& message, Client* client) :
+		Event(client),
+		_nick(message.nick),
+		_user(message.user),
+		_host(message.host)
+	{
+	}
+
 	const QString&
 	CommandEvent::nick() const
 	{
@@ -18,12 +26,6 @@ namespace com
 	CommandEvent::host() const
 	{
 		return _host;
-	}
-
-	const QStringList&
-	CommandEvent::args() const
-	{
-		return _args;
 	}
 
 } // namespace com

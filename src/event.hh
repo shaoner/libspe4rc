@@ -24,12 +24,10 @@ namespace com
 	class Event
 	{
 	public:
+		/// Ctor
+		Event(Client* client);
+		/// Dtor
 		virtual ~Event();
-	public:
-		/// Describes how to fill an event from an irc message
-		virtual void fill_in(Message& message) = 0;
-		/// Set the associated session to have access in the notifier
-		void set_client(Client* Client);
 	protected:
 		/// Get associated irc client session
 		const Client& client() const;

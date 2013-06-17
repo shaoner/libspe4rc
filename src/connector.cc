@@ -71,7 +71,7 @@ namespace com
 	Connector::on_connect()
 	{
 		_connected = true;
-		emit onConnect();
+		emit onSocketConnect();
 	}
 
 	void
@@ -127,7 +127,7 @@ namespace com
 	Connector::on_disconnect()
 	{
 		_connected = false;
-		emit onDisconnect();
+		emit onSocketDisconnect();
 	}
 
 } // namespace com

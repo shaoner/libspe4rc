@@ -12,16 +12,16 @@ namespace com
 	class CommandEvent : public Event
 	{
 	public:
+		CommandEvent(Message& message, Client* session);
+	public:
 		/// Get client info
 		const QString& nick() const;
 		const QString& user() const;
 		const QString& host() const;
-		const QStringList& args() const;
 	protected:
-		QString _nick;
-		QString _user;
-		QString _host;
-		QStringList _args;
+		const QString& _nick;
+		const QString& _user;
+		const QString& _host;
 	};
 
 } // namespace com

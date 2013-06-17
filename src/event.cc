@@ -8,15 +8,13 @@
 
 namespace com
 {
-
-	Event::~Event()
+	Event::Event(Client* client) :
+		_client(client)
 	{
 	}
 
-	void
-	Event::set_client(Client* client)
+	Event::~Event()
 	{
-		_client = client;
 	}
 
 	const Client&

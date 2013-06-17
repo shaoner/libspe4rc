@@ -174,18 +174,19 @@ namespace com
 	class RawEvent : public Event
 	{
 	public:
-		/// Fill RawEvent field with an irc message
-		void fill_in(Message& message);
+		/// Ctor
+		RawEvent(Message& message, Client* client);
+	public:
 		/// Get the raw number
 		quint16 raw() const;
 		/// Get the target, usually this is the client's nickname
 		const QString& target() const;
 		/// Get facultative parameters
-		const QString& rawmsg() const;
+		const QString& msg() const;
 	private:
 		quint16 _raw;
-		QString _target;
-		QString _rawmsg;
+		const QString& _target;
+		QString _msg;
 	};
 
 } // namespace com

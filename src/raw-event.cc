@@ -9,12 +9,13 @@
 namespace com
 {
 
-	void
-	RawEvent::fill_in(Message& message)
+	RawEvent::RawEvent(Message& message, Client* client) :
+		Event(client),
+		_raw(message.rawNumber),
+		_target(message.params[0])
 	{
-		_raw = message.rawNumber;
-		_target = message.params.takeFirst();
-		_rawmsg = message.params.join(" ");
+		message.params.takeFirst();
+		_msg = message.params.join(" ");
 	}
 
 	quint16
@@ -30,9 +31,9 @@ namespace com
 	}
 
 	const QString&
-	RawEvent::rawmsg() const
+	RawEvent::msg() const
 	{
-		return _rawmsg;
+		return _msg;
 	}
 
 } // namespace com
