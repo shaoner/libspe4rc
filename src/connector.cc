@@ -94,6 +94,7 @@ namespace com
 				_parserDriver.parse(line, &message);
 				if (message.isValid())
 				{
+					qDebug() << line;
 					emit onIrcData(message);
 				}
 			}
