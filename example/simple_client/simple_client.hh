@@ -14,10 +14,10 @@ class SimpleClient : public QObject
 public:
 	SimpleClient();
 public slots:
-	void onNotice(UserEvent* event);
-	void onRaw(RawEvent* event);
-	void onJoin(ChannelEvent* event);
-	void onPart(ChannelEvent* event);
+	void onNotice(CommandEvent& event, const QString& target, const QString& msg);
+	void onRaw(RawEvent& event);
+	void onJoin(CommandEvent& event, const QString& channel);
+	void onPart(CommandEvent& event, const QString& channel, const QString& reason);
 };
 
 
