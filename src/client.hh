@@ -72,6 +72,7 @@ namespace com
 
 		void onJoin(CommandEvent& event, const QString& channel);
 		void onPart(CommandEvent& event, const QString& channel, const QString& reason);
+		void onKick(CommandEvent& event, const QString& channel, const QString& target, const QString& reason);
 
 		void onUserMode(CommandEvent& event, const QString& target, const QString& modes);
 		void onChannelMode(CommandEvent& event, const QString& channel, const QString& modes, const QStringList& args);

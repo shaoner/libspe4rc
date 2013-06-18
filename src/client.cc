@@ -205,6 +205,19 @@ namespace com
 				else if (_channels.contains(channel))
 					_channels[channel]->remove(event.nick());
 			}
+			else if ((message.commandName == "KICK") && (message.params.count() > 2))
+			{
+				const QString& channel = message.params[0];
+				const QString& target = message.params[1];
+				emit onKick(event, channel, target, message.params[2]);
+				// If the client leaves, I can remove the channel
+				// from my channel list
+				if (target == _nickname)
+					delete _channels.take(channel);
+				// Remove the user from the channel
+				else if (_channels.contains(channel))
+					_channels[channel]->remove(target);
+			}
 			else if ((message.commandName == "MODE") && (message.params.count() > 1))
 			{
 				const QString& target = message.params[0];
