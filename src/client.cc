@@ -249,14 +249,14 @@ namespace com
 				if (event.nick() == _nickname)
 					_nickname = newNick;
 			}
-			else if (message.commandName == "NOTICE")
+			else if ((message.commandName == "NOTICE") && (message.params.count() > 1))
 			{
-				//emit onNotice(_userEvent);
+				emit onNotice(event, message.params[0], message.params[1]);
 			}
 			else if ((message.commandName == "TOPIC") && (message.params.count() > 1))
 			{
 				emit onChangeTopic(event, message.params[0], message.params[1]);
- 			}
+			}
 			else // Unsupported command
 			{
 				qDebug() << "Unknown command " << message.commandName;
