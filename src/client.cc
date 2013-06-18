@@ -253,6 +253,10 @@ namespace com
 			{
 				//emit onNotice(_userEvent);
 			}
+			else if ((message.commandName == "TOPIC") && (message.params.count() > 1))
+			{
+				emit onChangeTopic(event, message.params[0], message.params[1]);
+ 			}
 			else // Unsupported command
 			{
 				qDebug() << "Unknown command " << message.commandName;

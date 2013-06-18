@@ -80,10 +80,10 @@ namespace com
 
 		void onNotice(CommandEvent& event, const QString& target, const QString& msg);
 
-
 		void onRaw(RawEvent& event);
 		void onUserList(const QString& channel, UserList* users);
 
+		void onChangeTopic(CommandEvent& event, const QString& channel, const QString& subject);
 		void onTopic(const QString& channel, const QString& topic);
 		void onTopicInfo(const QString& channel, const QString& author, uint date);
 	private slots:
