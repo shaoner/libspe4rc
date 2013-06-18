@@ -1,4 +1,4 @@
-Libspe4rc v0.2.1a
+Libspe4rc v0.4.0a
 =======
 
 Libspe4rc (pronunced libspea-rc) is a library that can be used to build an IRC client.
@@ -38,21 +38,35 @@ make
 
 ```c++
 
-class IrcHandler
+class MyIrcClient : public QObject
 {
-	IrcHandler()
+
+	Q_OBJECT
+
+	MyIrcClient()
 	{
-		Client* client = new Client("shaoner", "shaoner`", "shao", "WE DO NOT BREAK THE USERSPACE Mauro!");
-		connect(client, SIGNAL(onJoin(ChannelEvent*), this, SLOT(on_join(ChannelEvent*)));
+		Client* client = new Client("shaoner", "shao", "WE DO NOT BREAK USERSPACE Mauro!");
+		client->add_altnickname("shaoner1");
+		client->add_altnickname("shaoner2");
+		client->add_altnickname("shaoner3");
+		connect(client, SIGNAL(onJoin(CommandEvent&, const QString&)), this, SLOT(on_join(CommandEvent& event, const QString&)));
+		connect(client, SIGNAL(onKick(CommandEvent&, const QString&, const QString&, const QString&)),
+				this, SLOT(on_join(CommandEvent& event, const QString&, const QString&, const QString&)));
         client->start("irc.spe4k.com", 6667);
 	}
 
 	// on join event listener
-   	void on_join(ChannelEvent* event)
+   	void on_join(CommandEvent& event, const QString& channel)
    	{
-		qDebug() << "Hello " << event->client()->nickname();
-		qDebug() << "* " << event->nick() << " has joined " << event->channel();
+		qDebug() << "You can access the associated client session through event.client()";
+		qDebug() << "Hello " << event.client().nickname();
+		qDebug() << "* " << event.nick() << " has joined " << channel;
    	}
+
+	void on_kick(CommandEvent& event, const QString& channel, const QString& target, const QString& reason)
+	{
+		qDebug() << target << " has been kicked by " << event.nick() << "( reason: " << reason << " )";
+	}
 };
 // ...
 ```
