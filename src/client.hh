@@ -34,7 +34,6 @@ namespace com
 	public:
         /// Ctor
 		Client(const QString& nickname = "",
-			   const QString& altnickname = "",
 			   const QString& user = "",
 			   const QString& realname = "");
 		/// Dtor
@@ -47,11 +46,10 @@ namespace com
 		void send(const QString& target, const QString& message);
 		/// Client parameters
 		void set_nickname(const QString& nickname);
-		void set_altnickname(const QString& altnickname);
+		void add_altnickname(const QString& nickname);
 		void set_user(const QString& user);
 		void set_realname(const QString& realname);
 		const QString& nickname() const;
-		const QString& altnickname() const;
 		const QString& user() const;
 		const QString& realname() const;
 		const QHash<QString, UserList*>& channels() const;
@@ -101,7 +99,7 @@ namespace com
 		QString _password;
 		QString _prefix;
 		QString _nickname;
-		QString _altnickname;
+		QStringList _altnickname;
 		QString _user;
 		QString _realname;
 		QHash<QString, UserList*> _channels;

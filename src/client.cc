@@ -3,7 +3,6 @@
 namespace com
 {
 	Client::Client(const QString& nickname,
-				   const QString& altnickname,
 				   const QString& user,
 				   const QString& realname) :
 
@@ -11,7 +10,6 @@ namespace com
 		_port(DEFAULT_PORT),
 		_password(""),
 		_nickname(nickname),
-		_altnickname(altnickname),
 		_user(user),
 		_realname(realname)
 	{
@@ -54,14 +52,16 @@ namespace com
 		if (!nickname.isEmpty())
 		{
 			_nickname = nickname;
+			if (_connected)
+				write("NICK " + nickname);
 		}
 	}
 
 	void
-	Client::set_altnickname(const QString& altnickname)
+	Client::add_altnickname(const QString& nickname)
 	{
-		if (!altnickname.isEmpty())
-			_altnickname = altnickname;
+		if (!nickname.isEmpty())
+			_altnickname.append(nickname);
 	}
 
 	void
@@ -82,12 +82,6 @@ namespace com
 	Client::nickname() const
 	{
 		return _nickname;
-	}
-
-	const QString&
-	Client::altnickname() const
-	{
-		return _altnickname;
 	}
 
 	const QString&
@@ -127,9 +121,6 @@ namespace com
 		if (!_password.isEmpty())
 			write("PASS " + _password);
 		write("NICK " + _nickname);
-		/*
-		 * FIXME: Alternative nickname is not handled
-		 */
 		write("USER " + _user + " 8 * :" + _realname);
 		emit onConnect();
 	}
@@ -373,6 +364,16 @@ namespace com
 			{
 				if (message.params.count() > 2)
 					emit onTopicInfo(message.params[0], message.params[1], message.params[2].toUInt());
+				break;
+			}
+			// Alternative nicknames
+			case ERR_NICKNAMEINUSE:
+			{
+				static int altIdx = 0;
+				if (_altnickname.count() > altIdx)
+				{
+					set_nickname(_altnickname[altIdx++]);
+				}
 				break;
 			}
 		}

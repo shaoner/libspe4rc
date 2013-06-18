@@ -61,8 +61,9 @@ namespace com
 		void on_receive_data();
 		void on_socket_error(QAbstractSocket::SocketError error) const;
 		void on_disconnect();
-	private:
+	protected:
 		bool _connected;
+	private:
 		QTcpSocket* _socket;
 		QByteArray _readData;
 		Parser _parserDriver;
