@@ -16,6 +16,7 @@ namespace com
 		connect(this, SIGNAL(onSocketConnect()), this, SLOT(on_socket_connect()));
 		connect(this, SIGNAL(onSocketDisconnect()), this, SLOT(on_socket_disconnect()));
 		connect(this, SIGNAL(onIrcData(Message&)), this, SLOT(on_irc_data(Message&)));
+		_channelPrefixes = "#&!";
 	}
 
 	Client::~Client()
@@ -114,6 +115,12 @@ namespace com
 		return _port;
 	}
 
+	bool
+	Client::is_channel(const QString& channel) const
+	{
+		return _channelPrefixes.contains(channel[0]);
+	}
+
 	void
 	Client::on_socket_connect()
 	{
@@ -168,7 +175,7 @@ namespace com
 			else if ((message.commandName == "PRIVMSG") && (message.params.count() > 1))
 			{
 				const QString& target = message.params[0];
-				if (target.startsWith('#'))
+				if (is_channel(target))
 					emit onChannelMessage(event, target, message.params[1]);
 				else
 					emit onPrivateMessage(event, target, message.params[1]);
@@ -214,7 +221,7 @@ namespace com
 				const QString& target = message.params[0];
 				const QString& modes = message.params[1];
 				// Channel mode
-				if (target.startsWith('#'))
+				if (is_channel(target))
 				{
 					QStringList modeArgs;
 					if (message.params.count() > 2)
@@ -406,6 +413,10 @@ namespace com
 					roleHandler->add(cmode, cprefix, level);
 					level <<= 1;
 				}
+			}
+			else if (params[0] == "CHANTYPES")
+			{
+				_channelPrefixes = params[1];
 			}
 		}
 	}

@@ -56,6 +56,7 @@ namespace com
 		/// Server paramaters
 		const QString& hostname() const;
 		quint16 port() const;
+		bool is_channel(const QString& channel) const;
 	signals:
 		/// Event notifiers
 		void onError();
@@ -103,6 +104,7 @@ namespace com
 		QString _user;
 		QString _realname;
 		QHash<QString, UserList*> _channels;
+		QString _channelPrefixes;
 	};
 
 } // namespace com
