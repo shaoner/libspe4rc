@@ -66,7 +66,6 @@ namespace com
 	int
 	UserList::index_of(const QString& nick)
 	{
-		int ret = -1;
 		int size = count();
 		int left = 0;
 		int right = size - 1;
@@ -82,7 +81,7 @@ namespace com
 			else
 				right = mid - 1;
 		}
-		return ret;
+		return -1;
 	}
 
 	User*
