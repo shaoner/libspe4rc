@@ -179,7 +179,11 @@ namespace com
 			else if ((message.commandName == "JOIN") && (message.params.count() > 0))
 			{
 				const QString& channel = message.params[0];
-				if ((event.nick() != _nickname) && (_channels.contains(channel)))
+				// If the client join, add the channel to the channel list
+				if (event.nick() == _nickname)
+					_channels.insert(channel, new UserList());
+				// Add the new user to the channel
+				else if (_channels.contains(channel))
 					_channels[channel]->add(event.nick());
 				emit onJoin(event, channel);
 			}
@@ -191,7 +195,7 @@ namespace com
 					emit onPart(event, channel, message.params[1]);
 				else
 					emit onPart(event, channel, "");
-				// If the client leaves, I can remove the channel
+				// If the client leaves, remove the channel
 				// from my channel list
 				if (event.nick() == _nickname)
 					delete _channels.take(channel);
@@ -308,9 +312,7 @@ namespace com
 	void
 	Client::process_raw_data(Message& message)
 	{
-		static bool startNameRpl = true;
 		RawEvent event(message, this);
-
 		switch (event.raw())
 		{
 			// Get server parameters
@@ -322,28 +324,23 @@ namespace com
 			// NAME
 			case RPL_NAMREPLY:
 			{
-				// Since the userlist is maintained
-				// The userlist should be built only once
-				if (!startNameRpl)
-					break;
 				if (message.params.count() > 2)
 				{
 					const QString& channel = message.params[1];
 					const QStringList& nicks = message.params[2].split(' ');
-					UserList* users = NULL;
 					// Append these nicks a userlist
 					if (_channels.contains(channel))
 					{
-						users = _channels[channel];
-					}
-					else
-					{
-						users = new UserList();
-						_channels.insert(channel, users);
-					}
-					foreach(QString nick, nicks)
-					{
-						users->add(nick);
+						UserList* users = _channels[channel];
+						// If the userlist is already built
+						// We do nothing, because it should be maintained
+						// It avoids freeing and re-allocating memory for all users
+						if (!users->isEmpty())
+							break;
+						foreach(QString nick, nicks)
+						{
+							users->add(nick);
+						}
 					}
 				}
 				break;
@@ -353,10 +350,8 @@ namespace com
 				const QString& channel = message.params[0];
 				if (_channels.contains(channel))
 				{
-					UserList* users = _channels[channel];
-					emit onUserList(channel, users);
+					emit onUserList(channel, _channels[channel]);
 				}
-				startNameRpl = false;
 				break;
 			}
 			// Topic subject
