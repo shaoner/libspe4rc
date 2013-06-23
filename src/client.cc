@@ -251,6 +251,10 @@ namespace com
 			{
 				emit onNotice(event, message.params[0], message.params[1]);
 			}
+			else if ((message.commandName == "INVITE") && (message.params.count() > 1))
+			{
+				emit onInvite(event, message.params[0], message.params[1]);
+			}
 			else if ((message.commandName == "TOPIC") && (message.params.count() > 1))
 			{
 				emit onChangeTopic(event, message.params[0], message.params[1]);

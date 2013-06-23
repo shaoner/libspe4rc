@@ -78,6 +78,7 @@ namespace com
 		void onNick(CommandEvent& event, const QString& newNick);
 
 		void onNotice(CommandEvent& event, const QString& target, const QString& msg);
+		void onInvite(CommandEvent& event, const QString& target, const QString& channel);
 
 		void onRaw(RawEvent& event);
 		void onUserList(const QString& channel, UserList* users);
