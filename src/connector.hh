@@ -8,24 +8,16 @@
 # define COM_CONNECTOR_HH
 
 # include <QTcpSocket>
+
 # include <parser.hh>
 # include <message.hh>
+# include <irc-error.hh>
 
 /// IRC Message delimiter
 # define MSG_DELIMITER "\r\n"
 
 namespace com
 {
-
-	/// \enum Error
-	enum ConnectError
-	{
-		NO_ERROR,
-		NOT_INITIALIZED,
-		ALREADY_CONNECTED,
-		ALREADY_DISCONNECTED,
-		BAD_PARAMETERS,
-	};
 
 	/*!
 	 * \class Connector
@@ -51,15 +43,16 @@ namespace com
 		void onSocketConnect();
 		void onIrcData(Message& message);
 		void onSocketDisconnect();
+		void onError(IrcError error);
 	protected:
 		/// Connect to hostname and port
-		ConnectError open(const QString& hostname, int port) const;
+		bool open(const QString& hostname, int port);
 		/// Disconnect the socket if connected
-		ConnectError close() const;
+		bool close() const;
 	private slots:
 		void on_connect();
 		void on_receive_data();
-		void on_socket_error(QAbstractSocket::SocketError error) const;
+		void on_socket_error(QAbstractSocket::SocketError error);
 		void on_disconnect();
 	protected:
 		bool _connected;
