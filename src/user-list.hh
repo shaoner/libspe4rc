@@ -8,6 +8,7 @@
 # define COM_USERLIST_HH
 
 # include <QList>
+# include <QStringList>
 # include <QDebug>
 
 # include <user.hh>
@@ -41,6 +42,9 @@ namespace com
 		/// using a dichotomic search
 		int index_of(const QString& nick);
 		User* get(const QString& nick);
+		/// Get a list of users whose nick starts with token
+		/// This is useful for completion for search by filtering
+		QStringList starts_with(const QString& token);
 	private slots:
 		void on_change_nick(User* user, const QString& newNick);
 	};
