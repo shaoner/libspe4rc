@@ -44,6 +44,7 @@ namespace com
 		void onIrcData(Message& message);
 		void onSocketDisconnect();
 		void onError(IrcError error);
+		void onConnecting();
 	protected:
 		/// Connect to hostname and port
 		bool open(const QString& hostname, int port);

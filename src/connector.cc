@@ -54,6 +54,7 @@ namespace com
 	{
 		if (_connected)
 			return false;
+		emit onConnecting();
 		_socket->connectToHost(hostname, port);
 		return true;
 	}
