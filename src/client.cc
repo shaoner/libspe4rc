@@ -21,6 +21,7 @@ namespace com
 
 	Client::~Client()
 	{
+		close();
 	}
 
 	void
@@ -136,6 +137,7 @@ namespace com
 	Client::on_socket_disconnect()
 	{
 		emit onDisconnect();
+		clean();
 	}
 
 	void
@@ -164,12 +166,6 @@ namespace com
 					{
 						users->remove(event.nick());
 					}
-				}
-				else // Remove all channels, which includes deleting each user
-				{
-					for (QHash<QString, UserList*>::iterator it = _channels.begin();
-						 it != _channels.end(); ++it)
-						delete _channels.take(it.key());
 				}
 			}
 			else if ((message.commandName == "PRIVMSG") && (message.params.count() > 1))
@@ -423,6 +419,20 @@ namespace com
 				_channelPrefixes = params[1];
 			}
 		}
+	}
+
+	void
+	Client::clean()
+	{
+        // Remove all channels, which includes deleting each user
+		QHash<QString, UserList*>::iterator i;
+		for (i = _channels.begin(); i != _channels.end(); ++i)
+		{
+			delete i.value();
+		}
+		_channels.clear();
+		// Clean the roles
+		Role::get()->reset();
 	}
 
 } // namespace com

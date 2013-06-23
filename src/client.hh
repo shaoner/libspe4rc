@@ -95,6 +95,7 @@ namespace com
 		void process_mode_channel(CommandEvent& event, const QString& channel, const QString& modes, const QStringList& args);
 		void process_raw_data(Message& message);
 		void process_server_params(const QStringList& serverParams);
+		void clean();
 	private:
 		QString _hostname;
 		int _port;
