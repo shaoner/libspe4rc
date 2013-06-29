@@ -2,13 +2,17 @@
 
 namespace com
 {
-	Client::Client(const QString& nickname,
+	Client::Client(const QString& name,
+				   const QString& hostname,
+				   quint16 port,
+				   const QString& password,
+				   const QString& nickname,
 				   const QString& user,
 				   const QString& realname) :
-
-		_hostname(""),
-		_port(DEFAULT_PORT),
-		_password(""),
+		_name(name),
+		_hostname(hostname),
+		_port(port),
+		_password(password),
 		_nickname(nickname),
 		_user(user),
 		_realname(realname)
@@ -25,13 +29,10 @@ namespace com
 	}
 
 	void
-	Client::start(const QString& hostname, quint16 port, const QString& password)
+	Client::start()
 	{
-		if (!hostname.isEmpty() && !_nickname.isEmpty() && !_user.isEmpty())
+		if (!_hostname.isEmpty() && !_nickname.isEmpty() && !_user.isEmpty() && !_connected)
 		{
-			_hostname = hostname;
-			_port = port;
-			_password = password;
 			open(_hostname, _port);
 		}
 	}
@@ -102,6 +103,12 @@ namespace com
 	Client::channels() const
 	{
 		return _channels;
+	}
+
+	const QString&
+	Client::name() const
+	{
+		return _name;
 	}
 
 	const QString&

@@ -33,14 +33,18 @@ namespace com
 
 	public:
         /// Ctor
-		Client(const QString& nickname = "",
+		Client(const QString& name,
+			   const QString& hostname,
+			   quint16 port = DEFAULT_PORT,
+			   const QString& password = "",
+			   const QString& nickname = "",
 			   const QString& user = "",
 			   const QString& realname = "");
 		/// Dtor
 		~Client();
 	public:
 		/// Connection
-		void start(const QString& hostname, quint16 port = DEFAULT_PORT, const QString& password = "");
+		void start();
 		void stop();
 		/// Commands
 		void send(const QString& target, const QString& message);
@@ -54,6 +58,7 @@ namespace com
 		const QString& realname() const;
 		const QHash<QString, UserList*>& channels() const;
 		/// Server paramaters
+		const QString& name() const;
 		const QString& hostname() const;
 		quint16 port() const;
 		bool is_channel(const QString& channel) const;
@@ -97,6 +102,7 @@ namespace com
 		void process_server_params(const QStringList& serverParams);
 		void clean();
 	private:
+		QString _name;
 		QString _hostname;
 		int _port;
 		QString _password;
