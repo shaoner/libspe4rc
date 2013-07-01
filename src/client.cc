@@ -41,9 +41,27 @@ namespace com
 	}
 
 	void
-	Client::send(const QString& target, const QString& message)
+	Client::msg(const QString& target, const QString& message) const
 	{
 		write("PRIVMSG " + target + " :" + message);
+	}
+
+	void
+	Client::join(const QStringList& channels) const
+	{
+		foreach (QString channel, channels)
+		{
+			write("JOIN " + channel);
+		}
+	}
+
+	void
+	Client::part(const QString& channel, const QString& reason) const
+	{
+		if (reason.isEmpty())
+			write("PART " + channel);
+		else
+			write("PART " + channel + " :" + reason);
 	}
 
 	void

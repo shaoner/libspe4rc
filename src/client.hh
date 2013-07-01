@@ -43,7 +43,10 @@ namespace com
 		void start(const QString& hostname, quint16 port = DEFAULT_PORT, const QString& password = "");
 		void stop();
 		/// Commands
-		void send(const QString& target, const QString& message);
+		void msg(const QString& target, const QString& message) const;
+		void join(const QStringList& channels) const;
+		void part(const QString& channel, const QString& reason = "") const;
+
 		/// Client parameters
 		void set_nickname(const QString& nickname);
 		void add_altnickname(const QString& nickname);
