@@ -2,42 +2,50 @@
 
 SimpleClient::SimpleClient()
 {
-	Client* c = new Client("shao2", "shao22", "user", "Im the boss");
-	connect(c, SIGNAL(onNotice(UserEvent*)), this, SLOT(onNotice(UserEvent*)));
-	connect(c, SIGNAL(onRaw(RawEvent*)), this, SLOT(onRaw(RawEvent*)));
-	connect(c, SIGNAL(onJoin(ChannelEvent*)), this, SLOT(onJoin(ChannelEvent*)));
-	connect(c, SIGNAL(onPart(ChannelEvent*)), this, SLOT(onPart(ChannelEvent*)));
-	c->start("irc.locklab.fr", 6667);
+	Client* c = new Client("richard", "stallman", "I'm a gnu");
+	c->add_altnickname("richie");
+	c->add_altnickname("emacs");
+	connect(c, SIGNAL(onNotice(CommandEvent&, const QString&, const QString&)),
+			this, SLOT(onNotice(CommandEvent&, const QString&, const QString&)));
+	connect(c, SIGNAL(onRaw(RawEvent&)),
+			this, SLOT(onRaw(RawEvent&)));
+	connect(c, SIGNAL(onJoin(CommandEvent&, const QString&)),
+			this, SLOT(onJoin(CommandEvent&, const QString&)));
+	connect(c, SIGNAL(onPart(CommandEvent&, const QString&, const QString&)), this, SLOT(onPart(CommandEvent&, const QString&, const QString&)));
+	c->start("127.0.0.1", 6667);
 }
 
 void
-SimpleClient::onNotice(UserEvent* event)
+SimpleClient::onNotice(CommandEvent& event, const QString& target, const QString& msg)
 {
-	qDebug() << "* [Notice from " << event->nick()
-			 << " to " << event->target() << "]: "
-			 << event->args()[0];
+	qDebug() << "* [Notice from " << event.nick()
+			 << " to " << target << "]: "
+			 << msg;
 }
 
 void
-SimpleClient::onRaw(RawEvent* event)
+SimpleClient::onRaw(RawEvent& event)
 {
-	qDebug() << "* [" << event->raw() << "]: " << event->rawmsg();
+	qDebug() << "* [" << event.raw() << "]: " << event.msg();
 }
 
 void
-SimpleClient::onJoin(ChannelEvent* event)
+SimpleClient::onJoin(CommandEvent& event, const QString& channel)
 {
-	qDebug() << "* " << event->nick()
-			 << " has joined " << event->channel()
-			 << " ( " << event->args()[0] << " )";
+	qDebug() << "* " << event.nick()
+			 << "@" << event.user()
+			 << "!" << event.host()
+			 << " has joined " << channel;
 }
 
 void
-SimpleClient::onPart(ChannelEvent* event)
+SimpleClient::onPart(CommandEvent& event, const QString& channel, const QString& reason)
 {
-	qDebug() << "* " << event->nick()
-			 << " has left " << event->channel()
-			 << " ( " << event->args()[0] << " )";
+	qDebug() << "* " << event.nick()
+ 			 << "@" << event.user()
+			 << "!" << event.host()
+			 << " has left " << channel
+			 << " ( " << reason << " )";
 }
 
 int main(int argc, char *argv[])

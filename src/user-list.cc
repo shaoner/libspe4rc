@@ -66,7 +66,6 @@ namespace com
 	int
 	UserList::index_of(const QString& nick)
 	{
-		int ret = -1;
 		int size = count();
 		int left = 0;
 		int right = size - 1;
@@ -82,7 +81,7 @@ namespace com
 			else
 				right = mid - 1;
 		}
-		return ret;
+		return -1;
 	}
 
 	User*
@@ -92,6 +91,50 @@ namespace com
 		if (idx < 0)
 			return NULL;
 		return at(idx);
+	}
+
+	QStringList
+	UserList::starts_with(const QString& token)
+	{
+		int size = count();
+		int left = 0;
+		int right = size - 1;
+		QStringList list;
+		// Simple dichotomic search
+		while (right >= left)
+		{
+			int mid = (left + right) / 2;
+			User* curUser = at(mid);
+			if (curUser->_nick.startsWith(token, Qt::CaseInsensitive))
+			{
+				list.append(curUser->_nick);
+				// Add nicks before
+				for (int i = mid - 1; i > 0; --i)
+				{
+					curUser = at(i);
+					if (curUser->_nick.startsWith(token, Qt::CaseInsensitive))
+						list.prepend(curUser->_nick);
+					else
+						break;
+				}
+				// Add nicks after
+				for (int i = mid + 1; i < size; ++i)
+				{
+					curUser = at(i);
+					if (curUser->_nick.startsWith(token, Qt::CaseInsensitive))
+						list.append(curUser->_nick);
+					else
+						break;
+				}
+				list.sort();
+				return list;
+			}
+			if (token.compare(curUser->_nick, Qt::CaseInsensitive) > 0)
+				left = mid + 1;
+			else
+				right = mid - 1;
+		}
+		return list;
 	}
 
 	void

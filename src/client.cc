@@ -2,13 +2,17 @@
 
 namespace com
 {
-	Client::Client(const QString& nickname,
+	Client::Client(const QString& name,
+				   const QString& hostname,
+				   quint16 port,
+				   const QString& password,
+				   const QString& nickname,
 				   const QString& user,
 				   const QString& realname) :
-
-		_hostname(""),
-		_port(DEFAULT_PORT),
-		_password(""),
+		_name(name),
+		_hostname(hostname),
+		_port(port),
+		_password(password),
 		_nickname(nickname),
 		_user(user),
 		_realname(realname)
@@ -16,20 +20,19 @@ namespace com
 		connect(this, SIGNAL(onSocketConnect()), this, SLOT(on_socket_connect()));
 		connect(this, SIGNAL(onSocketDisconnect()), this, SLOT(on_socket_disconnect()));
 		connect(this, SIGNAL(onIrcData(Message&)), this, SLOT(on_irc_data(Message&)));
+		_channelPrefixes = "#&!";
 	}
 
 	Client::~Client()
 	{
+		close();
 	}
 
 	void
-	Client::start(const QString& hostname, quint16 port, const QString& password)
+	Client::start()
 	{
-		if (!hostname.isEmpty() && !_nickname.isEmpty() && !_user.isEmpty())
+		if (!_hostname.isEmpty() && !_nickname.isEmpty() && !_user.isEmpty() && !_connected)
 		{
-			_hostname = hostname;
-			_port = port;
-			_password = password;
 			open(_hostname, _port);
 		}
 	}
@@ -121,6 +124,12 @@ namespace com
 	}
 
 	const QString&
+	Client::name() const
+	{
+		return _name;
+	}
+
+	const QString&
 	Client::hostname() const
 	{
 		return _hostname;
@@ -130,6 +139,12 @@ namespace com
 	Client::port() const
 	{
 		return _port;
+	}
+
+	bool
+	Client::is_channel(const QString& channel) const
+	{
+		return _channelPrefixes.contains(channel[0]);
 	}
 
 	void
@@ -147,6 +162,7 @@ namespace com
 	Client::on_socket_disconnect()
 	{
 		emit onDisconnect();
+		clean();
 	}
 
 	void
@@ -176,17 +192,11 @@ namespace com
 						users->remove(event.nick());
 					}
 				}
-				else // Remove all channels, which includes deleting each user
-				{
-					for (QHash<QString, UserList*>::iterator it = _channels.begin();
-						 it != _channels.end(); ++it)
-						delete _channels.take(it.key());
-				}
 			}
 			else if ((message.commandName == "PRIVMSG") && (message.params.count() > 1))
 			{
 				const QString& target = message.params[0];
-				if (target.startsWith('#'))
+				if (is_channel(target))
 					emit onChannelMessage(event, target, message.params[1]);
 				else
 					emit onPrivateMessage(event, target, message.params[1]);
@@ -194,7 +204,11 @@ namespace com
 			else if ((message.commandName == "JOIN") && (message.params.count() > 0))
 			{
 				const QString& channel = message.params[0];
-				if ((event.nick() != _nickname) && (_channels.contains(channel)))
+				// If the client join, add the channel to the channel list
+				if (event.nick() == _nickname)
+					_channels.insert(channel, new UserList());
+				// Add the new user to the channel
+				else if (_channels.contains(channel))
 					_channels[channel]->add(event.nick());
 				emit onJoin(event, channel);
 			}
@@ -206,7 +220,7 @@ namespace com
 					emit onPart(event, channel, message.params[1]);
 				else
 					emit onPart(event, channel, "");
-				// If the client leaves, I can remove the channel
+				// If the client leaves, remove the channel
 				// from my channel list
 				if (event.nick() == _nickname)
 					delete _channels.take(channel);
@@ -232,7 +246,7 @@ namespace com
 				const QString& target = message.params[0];
 				const QString& modes = message.params[1];
 				// Channel mode
-				if (target.startsWith('#'))
+				if (is_channel(target))
 				{
 					QStringList modeArgs;
 					if (message.params.count() > 2)
@@ -261,6 +275,10 @@ namespace com
 			else if ((message.commandName == "NOTICE") && (message.params.count() > 1))
 			{
 				emit onNotice(event, message.params[0], message.params[1]);
+			}
+			else if ((message.commandName == "INVITE") && (message.params.count() > 1))
+			{
+				emit onInvite(event, message.params[0], message.params[1]);
 			}
 			else if ((message.commandName == "TOPIC") && (message.params.count() > 1))
 			{
@@ -319,9 +337,7 @@ namespace com
 	void
 	Client::process_raw_data(Message& message)
 	{
-		static bool startNameRpl = true;
 		RawEvent event(message, this);
-
 		switch (event.raw())
 		{
 			// Get server parameters
@@ -333,28 +349,23 @@ namespace com
 			// NAME
 			case RPL_NAMREPLY:
 			{
-				// Since the userlist is maintained
-				// The userlist should be built only once
-				if (!startNameRpl)
-					break;
 				if (message.params.count() > 2)
 				{
 					const QString& channel = message.params[1];
 					const QStringList& nicks = message.params[2].split(' ');
-					UserList* users = NULL;
 					// Append these nicks a userlist
 					if (_channels.contains(channel))
 					{
-						users = _channels[channel];
-					}
-					else
-					{
-						users = new UserList();
-						_channels.insert(channel, users);
-					}
-					foreach(QString nick, nicks)
-					{
-						users->add(nick);
+						UserList* users = _channels[channel];
+						// If the userlist is already built
+						// We do nothing, because it should be maintained
+						// It avoids freeing and re-allocating memory for all users
+						if (!users->isEmpty())
+							break;
+						foreach(QString nick, nicks)
+						{
+							users->add(nick);
+						}
 					}
 				}
 				break;
@@ -364,10 +375,8 @@ namespace com
 				const QString& channel = message.params[0];
 				if (_channels.contains(channel))
 				{
-					UserList* users = _channels[channel];
-					emit onUserList(channel, users);
+					emit onUserList(channel, _channels[channel]);
 				}
-				startNameRpl = false;
 				break;
 			}
 			// Topic subject
@@ -425,7 +434,25 @@ namespace com
 					level <<= 1;
 				}
 			}
+			else if (params[0] == "CHANTYPES")
+			{
+				_channelPrefixes = params[1];
+			}
 		}
+	}
+
+	void
+	Client::clean()
+	{
+        // Remove all channels, which includes deleting each user
+		QHash<QString, UserList*>::iterator i;
+		for (i = _channels.begin(); i != _channels.end(); ++i)
+		{
+			delete i.value();
+		}
+		_channels.clear();
+		// Clean the roles
+		Role::get()->reset();
 	}
 
 } // namespace com

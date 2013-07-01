@@ -22,6 +22,7 @@ HEADERS += \
 	src/command-event.hh \
 	src/connector.hh \
     src/event.hh \
+	src/irc-error.hh \
     src/message.hh \
     src/parser.hh \
     src/raw-event.hh \

@@ -33,14 +33,18 @@ namespace com
 
 	public:
         /// Ctor
-		Client(const QString& nickname = "",
+		Client(const QString& name,
+			   const QString& hostname,
+			   quint16 port = DEFAULT_PORT,
+			   const QString& password = "",
+			   const QString& nickname = "",
 			   const QString& user = "",
 			   const QString& realname = "");
 		/// Dtor
 		~Client();
 	public:
 		/// Connection
-		void start(const QString& hostname, quint16 port = DEFAULT_PORT, const QString& password = "");
+		void start();
 		void stop();
 		/// Commands
 		void msg(const QString& target, const QString& message) const;
@@ -57,8 +61,10 @@ namespace com
 		const QString& realname() const;
 		const QHash<QString, UserList*>& channels() const;
 		/// Server paramaters
+		const QString& name() const;
 		const QString& hostname() const;
 		quint16 port() const;
+		bool is_channel(const QString& channel) const;
 	signals:
 		/// Event notifiers
 		void onError();
@@ -80,6 +86,7 @@ namespace com
 		void onNick(CommandEvent& event, const QString& newNick);
 
 		void onNotice(CommandEvent& event, const QString& target, const QString& msg);
+		void onInvite(CommandEvent& event, const QString& target, const QString& channel);
 
 		void onRaw(RawEvent& event);
 		void onUserList(const QString& channel, UserList* users);
@@ -96,7 +103,9 @@ namespace com
 		void process_mode_channel(CommandEvent& event, const QString& channel, const QString& modes, const QStringList& args);
 		void process_raw_data(Message& message);
 		void process_server_params(const QStringList& serverParams);
+		void clean();
 	private:
+		QString _name;
 		QString _hostname;
 		int _port;
 		QString _password;
@@ -106,6 +115,7 @@ namespace com
 		QString _user;
 		QString _realname;
 		QHash<QString, UserList*> _channels;
+		QString _channelPrefixes;
 	};
 
 } // namespace com

@@ -49,22 +49,23 @@ namespace com
 		_connected = connected;
 	}
 
-	ConnectError
-	Connector::open(const QString& hostname, int port) const
+	bool
+	Connector::open(const QString& hostname, int port)
 	{
 		if (_connected)
-			return ALREADY_CONNECTED;
+			return false;
+		emit onConnecting();
 		_socket->connectToHost(hostname, port);
-		return NO_ERROR;
+		return true;
 	}
 
-	ConnectError
+	bool
 	Connector::close() const
 	{
 		if (!_connected)
-			return ALREADY_DISCONNECTED;
+			return false;
 		_socket->disconnectFromHost();
-		return NO_ERROR;
+		return true;
 	}
 
 	void
@@ -88,38 +89,34 @@ namespace com
 		{
 			line = _readData.left(end);
 			_readData = _readData.mid(end + sizeof(MSG_DELIMITER) - 1);
-			if (!line.isEmpty())
+			message.clear();
+			_parserDriver.parse(line, &message);
+			if (message.isValid())
 			{
-				message.clear();
-				_parserDriver.parse(line, &message);
-				if (message.isValid())
-				{
-					qDebug() << line;
-					emit onIrcData(message);
-				}
+				qDebug() << line;
+				emit onIrcData(message);
 			}
+			else
+				emit onError(SYNTAX_ERROR);
 		}
 	}
 
 	void
-	Connector::on_socket_error(QAbstractSocket::SocketError error) const
+	Connector::on_socket_error(QAbstractSocket::SocketError error)
 	{
-		/*
-		 * FIXME: Handling errors
-		 */
 		switch (error)
 		{
 		case QAbstractSocket::RemoteHostClosedError:
-			qDebug("remote host close error");
+			emit onError(SOCKET_REMOTECLOSE_ERROR);
 			break;
 		case QAbstractSocket::HostNotFoundError:
-			qDebug("host not found error");
+			emit onError(SOCKET_HOSTNOTFOUND_ERROR);
 			break;
 		case QAbstractSocket::ConnectionRefusedError:
-			qDebug("connection refused error");
+			emit onError(SOCKET_CONNECTIONREFUSED_ERROR);
 			break;
 		default:
-			qDebug("unknown socket error");
+			emit onError(UNKNOWN_ERROR);
 		}
 	}
 
