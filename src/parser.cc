@@ -71,10 +71,10 @@ namespace com
 			// Get user and host
 			if ((i = qPrefix.indexOf(TOK_AT)) != -1)
 			{
-				_message->user = qPrefix.left(i);
+				_message->user = qPrefix.mid(1, i - 1);
 				qPrefix = qPrefix.mid(i);
 				i = qPrefix.indexOf(TOK_SPACE);
-				_message->host = qPrefix.left(i);
+				_message->host = qPrefix.mid(1, i - 1);
 			}
 			else // Get user
 			{
@@ -85,10 +85,10 @@ namespace com
 		// Get nickname or servername and host
 		else if ((i = qPrefix.indexOf(TOK_AT)) != -1)
 		{
-			_message->nick = qPrefix.left(i);
+			_message->nick = qPrefix.mid(1, i - 1);
 			qPrefix = qPrefix.mid(i);
 			i = qPrefix.indexOf(TOK_SPACE);
-			_message->host = qPrefix.left(i);
+			_message->host = qPrefix.mid(1, i - 1);
 		}
 		else // Get nickname or servername
 		{
