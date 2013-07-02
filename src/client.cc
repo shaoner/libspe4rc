@@ -59,6 +59,12 @@ namespace com
 	}
 
 	void
+	Client::join(const QString& channel) const
+	{
+		write("JOIN " + channel);
+	}
+
+	void
 	Client::part(const QString& channel, const QString& reason) const
 	{
 		if (reason.isEmpty())

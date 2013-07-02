@@ -49,6 +49,7 @@ namespace com
 		/// Commands
 		void msg(const QString& target, const QString& message) const;
 		void join(const QStringList& channels) const;
+		void join(const QString& channel) const;
 		void part(const QString& channel, const QString& reason = "") const;
 
 		/// Client parameters
