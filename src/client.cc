@@ -221,11 +221,6 @@ namespace com
 			else if ((message.commandName == "PART") && (message.params.count() > 0))
 			{
 				const QString& channel = message.params[0];
-				// Check if there is a part reason
-				if (message.params.count() > 1)
-					emit onPart(event, channel, message.params[1]);
-				else
-					emit onPart(event, channel, "");
 				// If the client leaves, remove the channel
 				// from my channel list
 				if (event.nick() == _nickname)
@@ -233,6 +228,11 @@ namespace com
 				// Remove the user from the channel
 				else if (_channels.contains(channel))
 					_channels[channel]->remove(event.nick());
+				// Check if there is a part reason
+				if (message.params.count() > 1)
+					emit onPart(event, channel, message.params[1]);
+				else
+					emit onPart(event, channel, "");
 			}
 			else if ((message.commandName == "KICK") && (message.params.count() > 2))
 			{
