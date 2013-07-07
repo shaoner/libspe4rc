@@ -32,7 +32,6 @@ namespace com
 			_fullnick = _prefix + nick;
 		else
 			_fullnick = nick;
-		emit onChangeNick(this, nick);
 		emit onChangeFullNick(nick);
 	}
 

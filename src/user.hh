@@ -47,7 +47,6 @@ namespace com
 		friend bool operator==(User& user1, User& user2);
 		friend bool operator<(User& user1, User& user2);
 	signals:
-		void onChangeNick(User*, const QString&);
 		void onChangeFullNick(const QString&);
 	private:
 		/// Ctor

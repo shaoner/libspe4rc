@@ -20,11 +20,8 @@ namespace com
 	 * \class UserList
 	 * \brief This class is used to retrieve a userlist by channel
 	 */
-	class UserList : public QObject, public QList<User*>
+	class UserList : public QHash<QString, User*>
 	{
-
-		Q_OBJECT
-
 	public:
 		/// Ctor
 		explicit UserList();
@@ -40,13 +37,7 @@ namespace com
 		void clear();
 		/// Find an IRC user, which is pretty fast
 		/// using a dichotomic search
-		int index_of(const QString& nick);
 		User* get(const QString& nick);
-		/// Get a list of users whose nick starts with token
-		/// This is useful for completion for search by filtering
-		QStringList starts_with(const QString& token);
-	private slots:
-		void on_change_nick(User* user, const QString& newNick);
 	};
 
 } // namespace com
