@@ -22,7 +22,7 @@ namespace com
 	UserList::add(const QString& nick)
 	{
 		User* user = new User(nick);
-		insert(nick, user);
+		insert(user->nick(), user);
 	}
 
 	void
