@@ -14,10 +14,10 @@ namespace irc
 		_connecting(false),
 		_socket(new QTcpSocket())
 	{
-		connect(_socket, SIGNAL(error(QAbstractSocket::SocketError)), this,
-				SLOT(on_socket_error(QAbstractSocket::SocketError)));
 		connect(_socket, SIGNAL(connected()), this, SLOT(on_connect()));
 		connect(_socket, SIGNAL(disconnected()), this, SLOT(on_disconnect()));
+		connect(_socket, SIGNAL(error(QAbstractSocket::SocketError)), this,
+				SLOT(on_socket_error(QAbstractSocket::SocketError)));
 		connect(_socket, SIGNAL(readyRead()), this, SLOT(on_receive_data()));
 	}
 
@@ -109,8 +109,6 @@ namespace irc
 				qDebug() << line;
 				emit onIrcData(message);
 			}
-			else
-				emit onError(SYNTAX_ERROR);
 		}
 	}
 
@@ -119,17 +117,18 @@ namespace irc
 	{
 		switch (error)
 		{
-		case QAbstractSocket::RemoteHostClosedError:
-			emit onError(SOCKET_REMOTECLOSE_ERROR);
-			break;
-		case QAbstractSocket::HostNotFoundError:
-			emit onError(SOCKET_HOSTNOTFOUND_ERROR);
-			break;
-		case QAbstractSocket::ConnectionRefusedError:
-			emit onError(SOCKET_CONNECTIONREFUSED_ERROR);
-			break;
-		default:
-			emit onError(UNKNOWN_ERROR);
+			case QAbstractSocket::RemoteHostClosedError:
+				emit onError(SOCKET_REMOTECLOSE_ERROR);
+				break;
+			case QAbstractSocket::HostNotFoundError:
+				emit onError(SOCKET_HOSTNOTFOUND_ERROR);
+				break;
+			case QAbstractSocket::ConnectionRefusedError:
+				emit onError(SOCKET_CONNECTIONREFUSED_ERROR);
+				break;
+			default:
+				emit onError(UNKNOWN_ERROR);
+				return;
 		}
 		emit onSocketDisconnect();
 	}
