@@ -7,8 +7,6 @@
 #ifndef COM_EVENT_HH
 # define COM_EVENT_HH
 
-# include <message.hh>
-
 namespace irc
 {
 
@@ -22,13 +20,13 @@ namespace irc
 	{
 	public:
 		/// Ctor
-		Event(Client* client);
-		/// Dtor
-		virtual ~Event();
+		Event(Client* client) :
+			_client(client)
+		{
+		}
 	protected:
 		/// Get associated irc client session
-		const Client& client() const;
-		Client& client();
+		const Client& client() const { return *_client; }
 	private:
 		Client* _client;
 	};

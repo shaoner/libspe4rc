@@ -7,24 +7,6 @@ namespace irc
 	{
 	}
 
-	const QString&
-	User::fullnick() const
-	{
-		return _fullnick;
-	}
-
-	const QString&
-	User::nick() const
-	{
-		return _nick;
-	}
-
-	quint8
-	User::roles() const
-	{
-		return _roles;
-	}
-
 	void
 	User::change_nick(const QString& nick)
 	{
@@ -123,12 +105,6 @@ namespace irc
 			_nick.remove(0, 1);
 		else
 			_prefix = 0;
-	}
-
-	void
-	User::set_nick(const QString& nick)
-	{
-		_nick = nick;
 	}
 
 } // namespace irc

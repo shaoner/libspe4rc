@@ -175,17 +175,24 @@ namespace irc
 	{
 	public:
 		/// Ctor
-		RawEvent(Message& message, Client* client);
+		RawEvent(Message& message, Client* client) :
+			Event(client),
+			_raw(message.rawNumber),
+			_target(message.params.takeFirst()),
+			_msg(message.params.join(" "))
+		{
+
+		}
 	public:
 		/// Get the raw number
-		quint16 raw() const;
+		quint16 raw() const { return _raw; }
 		/// Get the target, usually this is the client's nickname
-		const QString& target() const;
+		const QString& target() const { return _target; }
 		/// Get facultative parameters
-		const QString& msg() const;
+		const QString& msg() const { return _msg; }
 	private:
 		quint16 _raw;
-		const QString& _target;
+		QString _target;
 		QString _msg;
 	};
 

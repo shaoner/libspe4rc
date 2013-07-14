@@ -31,9 +31,9 @@ namespace irc
 		~User();
 	public:
 		/// user attributes
-		const QString& fullnick() const;
-		const QString& nick() const;
-		quint8 roles() const;
+		const QString& fullnick() const { return _fullnick; }
+		const QString& nick() const { return _nick; }
+		quint8 roles() const { return _roles; }
 		/// Change user attributes
 		void change_nick(const QString& nick);
 		void add_prefix(char prefix);
@@ -52,7 +52,7 @@ namespace irc
 		/// Ctor
 		User(const QString& fullnick);
 	private:
-		void set_nick(const QString& nick);
+		void set_nick(const QString& nick) { _nick = nick; }
 	private:
 		QString _fullnick;
 		QString _nick;
