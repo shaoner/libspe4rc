@@ -11,6 +11,7 @@ namespace irc
 
 	Connector::Connector() :
 		_connected(false),
+		_connecting(false),
 		_socket(new QTcpSocket())
 	{
 		connect(_socket, SIGNAL(error(QAbstractSocket::SocketError)), this,
@@ -38,41 +39,53 @@ namespace irc
 	}
 
 	bool
-	Connector::isConnected() const
-	{
-		return _connected;
-	}
-
-	void
-	Connector::connected(bool connected)
-	{
-		_connected = connected;
-	}
-
-	bool
 	Connector::open(const QString& hostname, int port)
 	{
-		if (_connected)
+		if (connection_established())
 			return false;
+		_connecting = true;
 		emit onConnecting();
 		_socket->connectToHost(hostname, port);
 		return true;
 	}
 
-	bool
+	void
 	Connector::close() const
 	{
-		if (!_connected)
-			return false;
 		_socket->disconnectFromHost();
-		return true;
+	}
+
+	bool
+	Connector::connection_established() const
+	{
+		return (_socket->state() == QAbstractSocket::ConnectedState);
+	}
+
+	bool
+	Connector::is_connected() const
+	{
+		return (connection_established() && _connected);
+	}
+
+	bool
+	Connector::is_connecting() const
+	{
+		return ((_socket->state() == QAbstractSocket::ConnectingState) &&
+				_connecting);
 	}
 
 	void
 	Connector::on_connect()
 	{
-		_connected = true;
 		emit onSocketConnect();
+	}
+
+	void
+	Connector::on_disconnect()
+	{
+		_connecting = false;
+		_connected = false;
+		emit onSocketDisconnect();
 	}
 
 	void
@@ -118,12 +131,6 @@ namespace irc
 		default:
 			emit onError(UNKNOWN_ERROR);
 		}
-	}
-
-	void
-	Connector::on_disconnect()
-	{
-		_connected = false;
 		emit onSocketDisconnect();
 	}
 

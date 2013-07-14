@@ -35,10 +35,9 @@ namespace irc
 	public:
 		/// Send a simple message
 		int write(const QString& message) const;
-		/// Get the connection status
-		bool isConnected() const;
-		/// Set the connection status
-		void connected(bool connected);
+		bool connection_established() const;
+		bool is_connected() const;
+		bool is_connecting() const;
 	signals:
 		void onSocketConnect();
 		void onIrcData(Message& message);
@@ -49,7 +48,7 @@ namespace irc
 		/// Connect to hostname and port
 		bool open(const QString& hostname, int port);
 		/// Disconnect the socket if connected
-		bool close() const;
+		void close() const;
 	private slots:
 		void on_connect();
 		void on_receive_data();
@@ -57,8 +56,9 @@ namespace irc
 		void on_disconnect();
 	protected:
 		bool _connected;
-	private:
+		bool _connecting;
 		QTcpSocket* _socket;
+	private:
 		QByteArray _readData;
 		Parser _parserDriver;
 	};

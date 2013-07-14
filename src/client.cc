@@ -31,7 +31,7 @@ namespace irc
 	void
 	Client::start()
 	{
-		if (!_hostname.isEmpty() && !_nickname.isEmpty() && !_user.isEmpty() && !_connected)
+		if (!_hostname.isEmpty() && !_nickname.isEmpty() && !_user.isEmpty())
 		{
 			open(_hostname, _port);
 		}
@@ -79,7 +79,7 @@ namespace irc
 		if (!nickname.isEmpty())
 		{
 			_nickname = nickname;
-			if (_connected)
+			if (connection_established())
 				write("NICK " + nickname);
 		}
 	}
@@ -161,7 +161,6 @@ namespace irc
 			write("PASS " + _password);
 		write("NICK " + _nickname);
 		write("USER " + _user + " 8 * :" + _realname);
-		emit onConnect();
 	}
 
 	void
@@ -346,6 +345,13 @@ namespace irc
 		RawEvent event(message, this);
 		switch (event.raw())
 		{
+		    case RPL_WELCOME:
+			{
+				_connected = true;
+				_connecting = false;
+				emit onConnect();
+				break;
+			}
 			// Get server parameters
 			case RPL_BOUNCE:
 			{
@@ -402,12 +408,15 @@ namespace irc
 			// Alternative nicknames
 			case ERR_NICKNAMEINUSE:
 			{
-				static int altIdx = 0;
-				if (_altnickname.count() > altIdx)
+				if (!_connected)
 				{
-					set_nickname(_altnickname[altIdx++]);
+					static int altIdx = 0;
+					if (_altnickname.count() > altIdx)
+					{
+						change_nickname(_altnickname[altIdx++]);
+					}
+					break;
 				}
-				break;
 			}
 		}
 		emit onRaw(event);
