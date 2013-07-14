@@ -38,6 +38,15 @@ namespace irc
 	}
 
 	void
+	Client::start(const QString& hostname, quint16 port, const QString& password)
+	{
+		_hostname = hostname;
+		_port = port;
+		_password = password;
+		start();
+	}
+
+	void
 	Client::stop()
 	{
 		close();

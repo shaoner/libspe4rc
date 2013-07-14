@@ -45,6 +45,9 @@ namespace irc
 	public:
 		/// Connection
 		void start();
+		void start(const QString& hostname,
+				   quint16 port = DEFAULT_PORT,
+				   const QString& password = "");
 		void stop();
 		/// Commands
 		void msg(const QString& target, const QString& message) const;
