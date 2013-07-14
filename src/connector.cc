@@ -6,7 +6,7 @@
 
 # include <connector.hh>
 
-namespace com
+namespace irc
 {
 
 	Connector::Connector() :
@@ -127,4 +127,4 @@ namespace com
 		emit onSocketDisconnect();
 	}
 
-} // namespace com
+} // namespace irc

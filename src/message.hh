@@ -9,7 +9,7 @@
 
 # include <QtCore>
 
-namespace com
+namespace irc
 {
 
 	/*!
@@ -53,6 +53,6 @@ namespace com
 		bool _valid;
 	};
 
-} // namespace com
+} // namespace irc
 
 #endif /* !COM_MESSAGE_HH */

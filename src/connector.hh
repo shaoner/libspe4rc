@@ -16,7 +16,7 @@
 /// IRC Message delimiter
 # define MSG_DELIMITER "\r\n"
 
-namespace com
+namespace irc
 {
 
 	/*!
@@ -63,6 +63,6 @@ namespace com
 		Parser _parserDriver;
 	};
 
-} // namespace com
+} // namespace irc
 
 #endif /* !COM_CONNECTOR_HH */

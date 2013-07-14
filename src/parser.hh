@@ -40,7 +40,7 @@
 		}										\
 	} while (0)
 
-namespace com
+namespace irc
 {
 	/*!
 	 * \class Parser
@@ -89,6 +89,6 @@ namespace com
 		Message* _message;
 	};
 
-} // namespace com
+} // namespace irc
 
 #endif /* !COM_PARSER_HH */

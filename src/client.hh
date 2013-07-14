@@ -20,7 +20,7 @@
 /// The default IRC port
 # define DEFAULT_PORT 6667
 
-namespace com
+namespace irc
 {
 
 	/*!
@@ -119,6 +119,6 @@ namespace com
 		QString _channelPrefixes;
 	};
 
-} // namespace com
+} // namespace irc
 
 #endif /* !COM_CLIENT_HH */

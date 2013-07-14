@@ -1,6 +1,6 @@
 #include <role.hh>
 
-namespace com
+namespace irc
 {
 
 	Role* Role::_instance = NULL;
@@ -57,4 +57,4 @@ namespace com
 		_supportedRoles['@'] = 4;
 	}
 
-} // namespace com
+} // namespace irc

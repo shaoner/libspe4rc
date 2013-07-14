@@ -12,7 +12,7 @@
 
 # include <event.hh>
 
-namespace com
+namespace irc
 {
 
 	enum RawNumber
@@ -189,6 +189,6 @@ namespace com
 		QString _msg;
 	};
 
-} // namespace com
+} // namespace irc
 
 #endif /* !COM_RAW_EVENT_HH */

@@ -1,6 +1,6 @@
 #include <client.hh>
 
-namespace com
+namespace irc
 {
 	Client::Client(const QString& name,
 				   const QString& hostname,
@@ -461,4 +461,4 @@ namespace com
 		Role::get()->reset();
 	}
 
-} // namespace com
+} // namespace irc

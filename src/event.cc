@@ -6,7 +6,7 @@
 
 #include <event.hh>
 
-namespace com
+namespace irc
 {
 	Event::Event(Client* client) :
 		_client(client)
@@ -29,4 +29,4 @@ namespace com
 		return *_client;
 	}
 
-} // namespace com
+} // namespace irc

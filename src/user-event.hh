@@ -9,7 +9,7 @@
 
 # include <command-event.hh>
 
-namespace com
+namespace irc
 {
 
 	/*!
@@ -30,6 +30,6 @@ namespace com
 		QString _target;
 	};
 
-} // namespace com
+} // namespace irc
 
 #endif /* !COM_USER_EVENT_HH */

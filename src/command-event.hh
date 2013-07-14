@@ -9,7 +9,7 @@
 
 # include <event.hh>
 
-namespace com
+namespace irc
 {
 	/*!
 	 * \class CommandEvent
@@ -31,6 +31,6 @@ namespace com
 		const QString& _host;
 	};
 
-} // namespace com
+} // namespace irc
 
 #endif /* !COM_COMMAND_EVENT_HH */

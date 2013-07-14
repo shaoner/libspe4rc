@@ -10,7 +10,7 @@
 # include <QHash>
 # include <QDebug>
 
-namespace com
+namespace irc
 {
 
 	/*!
@@ -46,6 +46,6 @@ namespace com
 		return role - (role >> 1);
 	}
 
-} // namespace com
+} // namespace irc
 
 #endif /* !COM_ROLE_HH */

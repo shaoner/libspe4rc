@@ -1,6 +1,6 @@
 #include <command-event.hh>
 
-namespace com
+namespace irc
 {
 	CommandEvent::CommandEvent(Message& message, Client* client) :
 		Event(client),
@@ -28,4 +28,4 @@ namespace com
 		return _host;
 	}
 
-} // namespace com
+} // namespace irc

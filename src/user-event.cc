@@ -6,7 +6,7 @@
 
 #include <user-event.hh>
 
-namespace com
+namespace irc
 {
 
 	UserEvent::UserEvent() :
@@ -33,4 +33,4 @@ namespace com
 		return _target;
 	}
 
-} // namespace com
+} // namespace irc

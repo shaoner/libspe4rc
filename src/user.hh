@@ -12,7 +12,7 @@
 
 # include <role.hh>
 
-namespace com
+namespace irc
 {
 
 	class UserList;
@@ -60,6 +60,6 @@ namespace com
 		quint8 _roles;
 	};
 
-} // namespace com
+} // namespace irc
 
 #endif /* !COM_USER_HH */

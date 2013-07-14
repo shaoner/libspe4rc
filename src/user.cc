@@ -1,6 +1,6 @@
 #include <user.hh>
 
-namespace com
+namespace irc
 {
 
 	User::~User()
@@ -131,4 +131,4 @@ namespace com
 		_nick = nick;
 	}
 
-} // namespace com
+} // namespace irc

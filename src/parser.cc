@@ -6,7 +6,7 @@
 
 #include <parser.hh>
 
-namespace com
+namespace irc
 {
 	Parser::Parser()
 	{
@@ -152,4 +152,4 @@ namespace com
 		return STS_NO_ERROR;
 	}
 
-} // namespace com
+} // namespace irc

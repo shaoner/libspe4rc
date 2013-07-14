@@ -6,7 +6,7 @@
 
 #include <message.hh>
 
-namespace com
+namespace irc
 {
 
 	Message::Message() :
@@ -37,4 +37,4 @@ namespace com
 		return _valid;
 	}
 
-} // namespace com
+} // namespace irc

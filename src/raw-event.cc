@@ -6,7 +6,7 @@
 
 #include <raw-event.hh>
 
-namespace com
+namespace irc
 {
 
 	RawEvent::RawEvent(Message& message, Client* client) :
@@ -36,4 +36,4 @@ namespace com
 		return _msg;
 	}
 
-} // namespace com
+} // namespace irc

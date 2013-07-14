@@ -1,6 +1,6 @@
 #include <user-list.hh>
 
-namespace com
+namespace irc
 {
 
 	UserList::UserList()
@@ -49,4 +49,4 @@ namespace com
 		return value(nick, NULL);
 	}
 
-} // namespace com
+} // namespace irc

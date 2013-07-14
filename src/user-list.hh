@@ -13,7 +13,7 @@
 
 # include <user.hh>
 
-namespace com
+namespace irc
 {
 
 	/*!
@@ -40,6 +40,6 @@ namespace com
 		User* get(const QString& nick);
 	};
 
-} // namespace com
+} // namespace irc
 
 #endif /* !COM_USERLIST_HH */

@@ -9,7 +9,7 @@
 
 # include <message.hh>
 
-namespace com
+namespace irc
 {
 
 	class Client;
@@ -33,6 +33,6 @@ namespace com
 		Client* _client;
 	};
 
-} // namespace com
+} // namespace irc
 
 #endif /* !COM_EVENT_HH */
