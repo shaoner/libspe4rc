@@ -20,7 +20,7 @@ namespace irc
 		_line = line;
 		_message = message;
 		err = parse_message();
-		_message->setValid(err == STS_NO_ERROR);
+		_message->isValid = (err == STS_NO_ERROR);
 	}
 
 	void

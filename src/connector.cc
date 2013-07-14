@@ -91,7 +91,7 @@ namespace irc
 			_readData = _readData.mid(end + sizeof(MSG_DELIMITER) - 1);
 			message.clear();
 			_parserDriver.parse(line, &message);
-			if (message.isValid())
+			if (message.isValid)
 			{
 				qDebug() << line;
 				emit onIrcData(message);

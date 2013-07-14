@@ -30,16 +30,12 @@ namespace irc
 		};
 		/// Clear the message
 		void clear();
-		/// Set the message validity according to the RFC1459
-		void setValid(bool valid);
-		/// Get the message validy
-		bool isValid();
 	public:
-		/// Destination name
+		/// Get the message validy
+		bool isValid;
+		/// Sender info
 		QString nick;
-		/// User ident
 		QString user;
-		/// User host
 		QString host;
 		/// Message type, which can be a raw or command
 		CommandType commandType;
@@ -49,8 +45,6 @@ namespace irc
 		QStringList params;
 		/// Raw number
 		quint16 rawNumber;
-	private:
-		bool _valid;
 	};
 
 } // namespace irc

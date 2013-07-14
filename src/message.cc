@@ -10,7 +10,7 @@ namespace irc
 {
 
 	Message::Message() :
-		_valid(false)
+		isValid(false)
 	{
 	}
 
@@ -23,18 +23,6 @@ namespace irc
 		commandName.clear();
 		params.clear();
 		rawNumber = 0;
-	}
-
-	void
-	Message::setValid(bool valid)
-	{
-		_valid = valid;
-	}
-
-	bool
-	Message::isValid()
-	{
-		return _valid;
 	}
 
 } // namespace irc
