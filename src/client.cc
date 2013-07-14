@@ -1,4 +1,32 @@
-#include <client.hh>
+/*
+ *
+ * Copyright 2013, Alexandre LAURENT <shaoner>
+ *
+ * This file is part of Libspe4rc.
+ *
+ * Libspe4rc is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Libspe4rc is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Libspe4rc. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+/*!
+ * \file client.cc
+ * \author shaoner
+ * \brief An IRC session
+ */
+
+#include "client.hh"
+#include "role.hh"
 
 namespace irc
 {
@@ -141,7 +169,6 @@ namespace irc
 			// Handle mandatory events
 			// This is not elegant, but it allows to handle non standard cases
 			// like PING and it avoids a complex mechanism
-			qDebug() << message.params;
 			CommandEvent event(message, this);
 
 			if ((message.commandName == "PING") && (message.params.count() > 0))
@@ -254,7 +281,7 @@ namespace irc
 			}
 			else // Unsupported command
 			{
-				qDebug() << "Unknown command " << message.commandName;
+				qWarning() << "Unknown command " << message.commandName;
 			}
 		}
 		else // message.commandType == Message::MSG_RAWNUM
