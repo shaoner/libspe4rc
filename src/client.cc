@@ -17,9 +17,11 @@ namespace irc
 		_user(user),
 		_realname(realname)
 	{
+		// Socket events
 		connect(this, SIGNAL(onSocketConnect()), this, SLOT(on_socket_connect()));
 		connect(this, SIGNAL(onSocketDisconnect()), this, SLOT(on_socket_disconnect()));
 		connect(this, SIGNAL(onIrcData(Message&)), this, SLOT(on_irc_data(Message&)));
+		// Default channel prefixes
 		_channelPrefixes = "#&!";
 	}
 
@@ -83,7 +85,7 @@ namespace irc
 	}
 
 	void
-	Client::set_nickname(const QString& nickname)
+	Client::change_nickname(const QString& nickname)
 	{
 		if (!nickname.isEmpty())
 		{
@@ -101,65 +103,17 @@ namespace irc
 	}
 
 	void
-	Client::set_user(const QString& user)
+	Client::change_user(const QString& user)
 	{
 		if (!user.isEmpty())
 			_user = user;
 	}
 
 	void
-	Client::set_realname(const QString& realname)
+	Client::change_realname(const QString& realname)
 	{
 		if (!realname.isEmpty())
 			_realname = realname;
-	}
-
-	const QString&
-	Client::nickname() const
-	{
-		return _nickname;
-	}
-
-	const QString&
-	Client::user() const
-	{
-		return _user;
-	}
-
-	const QString&
-	Client::realname() const
-	{
-		return _realname;
-	}
-
-	const QHash<QString, UserList*>&
-	Client::channels() const
-	{
-		return _channels;
-	}
-
-	const QString&
-	Client::name() const
-	{
-		return _name;
-	}
-
-	const QString&
-	Client::hostname() const
-	{
-		return _hostname;
-	}
-
-	quint16
-	Client::port() const
-	{
-		return _port;
-	}
-
-	bool
-	Client::is_channel(const QString& channel) const
-	{
-		return _channelPrefixes.contains(channel[0]);
 	}
 
 	void

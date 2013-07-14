@@ -56,19 +56,21 @@ namespace irc
 		void part(const QString& channel, const QString& reason = "") const;
 
 		/// Client parameters
-		void set_nickname(const QString& nickname);
+		void change_nickname(const QString& nickname);
 		void add_altnickname(const QString& nickname);
-		void set_user(const QString& user);
-		void set_realname(const QString& realname);
-		const QString& nickname() const;
-		const QString& user() const;
-		const QString& realname() const;
-		const QHash<QString, UserList*>& channels() const;
+		void change_user(const QString& user);
+		void change_realname(const QString& realname);
+		const QString& nickname() const { return _nickname; }
+		const QString& user() const { return _user; }
+		const QString& realname() const { return _realname; }
+		const QHash<QString, UserList*>& channels() const { return _channels; }
 		/// Server paramaters
-		const QString& name() const;
-		const QString& hostname() const;
-		quint16 port() const;
-		bool is_channel(const QString& channel) const;
+		const QString& name() const { return _name; }
+		const QString& hostname() const { return _hostname; }
+		quint16 port() const { return _port; }
+		bool is_channel(const QString& channel) const {
+			return _channelPrefixes.contains(channel[0]);
+		}
 	signals:
 		/// Event notifiers
 		void onError();
@@ -109,11 +111,12 @@ namespace irc
 		void process_server_params(const QStringList& serverParams);
 		void clean();
 	private:
+		/// Server info
 		QString _name;
 		QString _hostname;
 		int _port;
 		QString _password;
-		QString _prefix;
+		/// User info
 		QString _nickname;
 		QStringList _altnickname;
 		QString _user;
