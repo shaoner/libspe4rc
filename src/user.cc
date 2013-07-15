@@ -116,9 +116,8 @@ namespace irc
 	{
 		quint8 r1 = uint8_msb(user1._roles);
 		quint8 r2 = uint8_msb(user2._roles);
-
 		if (r1 == r2)
-			return QString::compare(user1._nick, user2._nick, Qt::CaseInsensitive) > 0;
+			return QString::compare(user1._nick, user2._nick, Qt::CaseInsensitive) < 0;
 		return r1 < r2;
 	}
 
