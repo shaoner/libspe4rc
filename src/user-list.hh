@@ -58,6 +58,8 @@ namespace irc
 		/// Find an IRC user, which is pretty fast
 		/// using a dichotomic search
 		User* get(const QString& nick);
+		/// Change a nickname
+		bool change_nick(const QString& oldNick, const QString& newNick);
 	};
 
 } // namespace irc

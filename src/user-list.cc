@@ -49,7 +49,7 @@ namespace irc
 	UserList::add(const QString& nick)
 	{
 		User* user = new User(nick);
-		insert(user->nick(), user);
+		insert(nick, user);
 	}
 
 	void
@@ -74,6 +74,18 @@ namespace irc
 	UserList::get(const QString& nick)
 	{
 		return value(nick, NULL);
+	}
+
+	bool
+	UserList::change_nick(const QString& oldNick, const QString& newNick)
+	{
+		if (contains(oldNick))
+		{
+			User* user = take(oldNick);
+			user->change_nick(newNick);
+			insert(newNick, user);
+		}
+		return false;
 	}
 
 } // namespace irc

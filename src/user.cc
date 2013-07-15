@@ -41,6 +41,7 @@ namespace irc
 			_fullnick = _prefix + nick;
 		else
 			_fullnick = nick;
+		_nick = nick;
 		emit onChangeFullNick(nick);
 	}
 

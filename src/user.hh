@@ -72,8 +72,6 @@ namespace irc
 		/// Ctor
 		User(const QString& fullnick);
 	private:
-		void set_nick(const QString& nick) { _nick = nick; }
-	private:
 		QString _fullnick;
 		QString _nick;
 		char _prefix;

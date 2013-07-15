@@ -26,6 +26,7 @@
  */
 
 #include "client.hh"
+#include "user.hh"
 #include "role.hh"
 
 namespace irc
@@ -259,9 +260,8 @@ namespace irc
 				// Change the nick of the user from each channel
 				foreach(UserList* users, _channels)
 				{
-					User* user = users->get(event.nick());
-					if (user)
-						user->change_nick(newNick);
+					if (users->contains(event.nick()))
+						users->change_nick(event.nick(), newNick);
 				}
 				// Change the client's nick
 				if (event.nick() == _nickname)
