@@ -49,7 +49,7 @@ namespace irc
 	UserList::add(const QString& nick)
 	{
 		User* user = new User(nick);
-		insert(nick, user);
+		add(user);
 	}
 
 	void
