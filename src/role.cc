@@ -47,24 +47,6 @@ namespace irc
 		_instance = NULL;
 	}
 
-	char
-	Role::to_prefix(quint8 role)
-	{
-		return _supportedRoles.key(role, 0);
-	}
-
-	quint8
-	Role::from_prefix(char prefix)
-	{
-		return _supportedRoles.value(prefix, 0);
-	}
-
-	char
-	Role::from_mode(char mode)
-	{
-		return _supportedPrefixes.value(mode, 0);
-	}
-
 	void
 	Role::add(char mode, char prefix, quint8 level)
 	{

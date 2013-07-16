@@ -31,6 +31,7 @@
 # include <QStringList>
 # include <QString>
 
+# include "message.hh"
 # include "event.hh"
 
 namespace irc
@@ -196,26 +197,37 @@ namespace irc
 	{
 	public:
 		/// Ctor
-		RawEvent(Message& message, Client* client) :
-			Event(client),
-			_raw(message.rawNumber),
-			_target(message.params.takeFirst()),
-			_msg(message.params.join(" "))
-		{
-
-		}
+		RawEvent(Message& message, Client* client);
 	public:
 		/// Get the raw number
-		quint16 raw() const { return _raw; }
+		quint16 raw() const;
 		/// Get the target, usually this is the client's nickname
-		const QString& target() const { return _target; }
+		const QString& target() const;
 		/// Get facultative parameters
-		const QString& msg() const { return _msg; }
+		const QString& msg() const;
 	private:
 		quint16 _raw;
 		QString _target;
 		QString _msg;
 	};
+
+	inline quint16
+	RawEvent::raw() const
+	{
+		return _raw;
+	}
+
+	inline const QString&
+	RawEvent::target() const
+	{
+		return _target;
+	}
+
+	inline const QString&
+	RawEvent::msg() const
+	{
+		return _msg;
+	}
 
 } // namespace irc
 

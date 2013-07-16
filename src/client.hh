@@ -31,6 +31,7 @@
 # include <QString>
 # include <QHash>
 
+# include "session.hh"
 # include "user-list.hh"
 # include "command-event.hh"
 # include "raw-event.hh"
@@ -52,13 +53,7 @@ namespace irc
 
 	public:
         /// Ctor
-		Client(const QString& name,
-			   const QString& hostname,
-			   quint16 port = DEFAULT_PORT,
-			   const QString& password = "",
-			   const QString& nickname = "",
-			   const QString& user = "",
-			   const QString& realname = "");
+		Client(const Session& session);
 		/// Dtor
 		~Client();
 	public:
@@ -79,17 +74,15 @@ namespace irc
 		void add_altnickname(const QString& nickname);
 		void change_user(const QString& user);
 		void change_realname(const QString& realname);
-		const QString& nickname() const { return _nickname; }
-		const QString& user() const { return _user; }
-		const QString& realname() const { return _realname; }
-		const QHash<QString, UserList*>& channels() const { return _channels; }
+		const QString& nickname() const;
+		const QString& user() const;
+		const QString& realname() const;
+		const QHash<QString, UserList*>& channels() const;
 		/// Server paramaters
-		const QString& name() const { return _name; }
-		const QString& hostname() const { return _hostname; }
-		quint16 port() const { return _port; }
-		bool is_channel(const QString& channel) const {
-			return _channelPrefixes.contains(channel[0]);
-		}
+		const QString& name() const;
+		const QString& hostname() const;
+		quint16 port() const;
+		bool is_channel(const QString& channel) const;
 	signals:
 		/// Event notifiers
 		void onError();
@@ -143,6 +136,116 @@ namespace irc
 		QHash<QString, UserList*> _channels;
 		QString _channelPrefixes;
 	};
+
+	inline void
+	Client::msg(const QString& target, const QString& message) const
+	{
+		write("PRIVMSG " + target + " :" + message);
+	}
+
+	inline void
+	Client::join(const QStringList& channels) const
+	{
+		foreach (QString channel, channels)
+		{
+			write("JOIN " + channel);
+		}
+	}
+
+	inline void
+	Client::join(const QString& channel) const
+	{
+		write("JOIN " + channel);
+	}
+
+	inline void
+	Client::part(const QString& channel, const QString& reason) const
+	{
+		if (reason.isEmpty())
+			write("PART " + channel);
+		else
+			write("PART " + channel + " :" + reason);
+	}
+
+	inline void
+	Client::change_nickname(const QString& nickname)
+	{
+		if (!nickname.isEmpty())
+		{
+			_nickname = nickname;
+			if (connection_established())
+				write("NICK " + nickname);
+		}
+	}
+
+	inline void
+	Client::add_altnickname(const QString& nickname)
+	{
+		if (!nickname.isEmpty())
+			_altnickname.append(nickname);
+	}
+
+	inline void
+	Client::change_user(const QString& user)
+	{
+		if (!user.isEmpty())
+			_user = user;
+	}
+
+	inline void
+	Client::change_realname(const QString& realname)
+	{
+		if (!realname.isEmpty())
+			_realname = realname;
+	}
+
+	inline const QString&
+	Client::nickname() const
+	{
+		return _nickname;
+	}
+
+	inline const QString&
+	Client::user() const
+	{
+		return _user;
+	}
+
+	inline const QString&
+	Client::realname() const
+	{
+		return _realname;
+	}
+
+	inline const QHash<QString, UserList*>&
+	Client::channels() const
+	{
+		return _channels;
+	}
+
+	inline const QString&
+	Client::name() const
+	{
+		return _name;
+	}
+
+	inline const QString&
+	Client::hostname() const
+	{
+		return _hostname;
+	}
+
+	inline quint16
+	Client::port() const
+	{
+		return _port;
+	}
+
+	inline bool
+	Client::is_channel(const QString& channel) const
+	{
+		return _channelPrefixes.contains(channel[0]);
+	}
 
 } // namespace irc
 

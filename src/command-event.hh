@@ -42,24 +42,35 @@ namespace irc
 	{
 	public:
 		/// Ctor
-		CommandEvent(Message& message, Client* client) :
-			Event(client),
-			_nick(message.nick),
-			_user(message.user),
-			_host(message.host)
-		 {
-		 }
-
+		CommandEvent(Message& message, Client* client);
 	public:
 		/// Get client info
-		const QString& nick() const { return _nick; }
-		const QString& user() const { return _user; }
-		const QString& host() const { return _host; }
+		const QString& nick() const;
+		const QString& user() const;
+		const QString& host() const;
 	protected:
 		const QString& _nick;
 		const QString& _user;
 		const QString& _host;
 	};
+
+	inline const QString&
+	CommandEvent::nick() const
+	{
+		return _nick;
+	}
+
+	inline const QString&
+	CommandEvent::user() const
+	{
+		return _user;
+	}
+
+	inline const QString&
+	CommandEvent::host() const
+	{
+		return _host;
+	}
 
 } // namespace irc
 

@@ -31,20 +31,15 @@
 
 namespace irc
 {
-	Client::Client(const QString& name,
-				   const QString& hostname,
-				   quint16 port,
-				   const QString& password,
-				   const QString& nickname,
-				   const QString& user,
-				   const QString& realname) :
-		_name(name),
-		_hostname(hostname),
-		_port(port),
-		_password(password),
-		_nickname(nickname),
-		_user(user),
-		_realname(realname)
+	Client::Client(const Session& session) :
+		_name(session._name),
+		_hostname(session._hostname),
+		_port(session._port),
+		_password(session._password),
+		_nickname(session._nickname),
+		_altnickname(session._altnickname),
+		_user(session._user),
+		_realname(session._realname)
 	{
 		// Socket events
 		connect(this, SIGNAL(onSocketConnect()), this, SLOT(on_socket_connect()));
@@ -81,68 +76,6 @@ namespace irc
 	Client::stop()
 	{
 		close();
-	}
-
-	void
-	Client::msg(const QString& target, const QString& message) const
-	{
-		write("PRIVMSG " + target + " :" + message);
-	}
-
-	void
-	Client::join(const QStringList& channels) const
-	{
-		foreach (QString channel, channels)
-		{
-			write("JOIN " + channel);
-		}
-	}
-
-	void
-	Client::join(const QString& channel) const
-	{
-		write("JOIN " + channel);
-	}
-
-	void
-	Client::part(const QString& channel, const QString& reason) const
-	{
-		if (reason.isEmpty())
-			write("PART " + channel);
-		else
-			write("PART " + channel + " :" + reason);
-	}
-
-	void
-	Client::change_nickname(const QString& nickname)
-	{
-		if (!nickname.isEmpty())
-		{
-			_nickname = nickname;
-			if (connection_established())
-				write("NICK " + nickname);
-		}
-	}
-
-	void
-	Client::add_altnickname(const QString& nickname)
-	{
-		if (!nickname.isEmpty())
-			_altnickname.append(nickname);
-	}
-
-	void
-	Client::change_user(const QString& user)
-	{
-		if (!user.isEmpty())
-			_user = user;
-	}
-
-	void
-	Client::change_realname(const QString& realname)
-	{
-		if (!realname.isEmpty())
-			_realname = realname;
 	}
 
 	void

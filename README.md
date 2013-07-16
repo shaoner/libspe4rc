@@ -58,20 +58,23 @@ class MyIrcClient : public QObject
 	MyIrcClient()
 	{
 	    // Init a session
-		Client* client = new Client("spe4k",
-					   	 	 		"irc.spe4k.com",
-									6667,
-									"shaoner",
-									"shao",
-									"WE DO NOT BREAK USERSPACE Mauro!");
-		client->add_altnickname("shaoner1");
-		client->add_altnickname("shaoner2");
-		client->add_altnickname("shaoner3");
+
+		Client client = Session("spe4k")
+			   		  	.hostname("irc.spe4k.com"),
+					   	.port(6667)
+						.password("")
+						.nickname("shaoner")
+						.altnickname("shaoner1")
+						.altnickname("shaoner2")
+						.altnickname("shaoner3")
+						.user("shaoner")
+						.realname("we do not break userspace MAURO")
 		// Attach to some event listeners
 		connect(client, SIGNAL(onJoin(CommandEvent&, const QString&)), this, SLOT(on_join(CommandEvent& event, const QString&)));
 		connect(client, SIGNAL(onKick(CommandEvent&, const QString&, const QString&, const QString&)),
 				this, SLOT(on_kick(CommandEvent& event, const QString&, const QString&, const QString&)));
-        client->start();
+        client.start();
+		// ...
 	}
 
 	// on join event listener

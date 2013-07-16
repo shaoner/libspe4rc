@@ -51,9 +51,9 @@ namespace irc
 		~User();
 	public:
 		/// user attributes
-		const QString& fullnick() const { return _fullnick; }
-		const QString& nick() const { return _nick; }
-		quint8 roles() const { return _roles; }
+		const QString& fullnick() const;
+		const QString& nick() const;
+		quint8 roles() const;
 		/// Change user attributes
 		void change_nick(const QString& nick);
 		void add_prefix(char prefix);
@@ -77,6 +77,40 @@ namespace irc
 		char _prefix;
 		quint8 _roles;
 	};
+
+	inline const QString&
+	User::fullnick() const
+	{
+		return _fullnick;
+	}
+
+	inline const QString&
+	User::nick() const
+	{
+		return _nick;
+	}
+
+	inline quint8
+	User::roles() const
+	{
+		return _roles;
+	}
+
+	inline bool
+	operator==(User& user1, User& user2)
+	{
+		return !QString::compare(user1._nick, user2._nick, Qt::CaseInsensitive);
+	}
+
+	inline bool
+	operator<(User& user1, User& user2)
+	{
+		quint8 r1 = uint8_msb(user1._roles);
+		quint8 r2 = uint8_msb(user2._roles);
+		if (r1 == r2)
+			return QString::compare(user1._nick, user2._nick, Qt::CaseInsensitive) < 0;
+		return r1 < r2;
+	}
 
 } // namespace irc
 

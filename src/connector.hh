@@ -84,6 +84,25 @@ namespace irc
 		Parser _parserDriver;
 	};
 
+	inline bool
+	Connector::connection_established() const
+	{
+		return (_socket->state() == QAbstractSocket::ConnectedState);
+	}
+
+	inline bool
+	Connector::is_connected() const
+	{
+		return (connection_established() && _connected);
+	}
+
+	inline bool
+	Connector::is_connecting() const
+	{
+		return ((_socket->state() == QAbstractSocket::ConnectingState) &&
+				_connecting);
+	}
+
 } // namespace irc
 
 #endif /* !COM_CONNECTOR_HH */

@@ -13,49 +13,26 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
-
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Libspe4rc. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 /*!
- * \file event.hh
+ * \file event.cc
  * \author shaoner
  * \brief IRC event interface
  */
 
-#ifndef COM_EVENT_HH
-# define COM_EVENT_HH
+#include "event.hh"
 
 namespace irc
 {
 
-	class Client;
-
-	/*!
-	 * \class Event
-	 * \brief This class is an interface representing an irc message as an event
-	 */
-	class Event
+	Event::Event(Client* client) :
+		_client(*client)
 	{
-	public:
-		/// Ctor
-		Event(Client* client);
-
-	protected:
-		/// Get associated irc client session
-		const Client& client() const;
-	private:
-		Client& _client;
-	};
-
-	inline const Client&
-	Event::client() const
-	{
-		return _client;
 	}
 
 } // namespace irc
-
-#endif /* !COM_EVENT_HH */

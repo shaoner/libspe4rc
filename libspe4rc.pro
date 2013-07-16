@@ -27,15 +27,20 @@ HEADERS += \
     src/parser.hh \
     src/raw-event.hh \
 	src/role.hh \
+	src/session.hh \
 	src/user.hh \
 	src/user-list.hh
 
 SOURCES += \
 	src/client.cc \
+	src/command-event.cc \
 	src/connector.cc \
+    src/event.cc \
     src/message.cc \
     src/parser.cc \
+    src/raw-event.cc \
 	src/role.cc \
+	src/session.cc \
 	src/user.cc \
 	src/user-list.cc
 

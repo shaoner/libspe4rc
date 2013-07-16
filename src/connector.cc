@@ -76,25 +76,6 @@ namespace irc
 		_socket->disconnectFromHost();
 	}
 
-	bool
-	Connector::connection_established() const
-	{
-		return (_socket->state() == QAbstractSocket::ConnectedState);
-	}
-
-	bool
-	Connector::is_connected() const
-	{
-		return (connection_established() && _connected);
-	}
-
-	bool
-	Connector::is_connecting() const
-	{
-		return ((_socket->state() == QAbstractSocket::ConnectingState) &&
-				_connecting);
-	}
-
 	void
 	Connector::on_connect()
 	{

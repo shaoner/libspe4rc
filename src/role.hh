@@ -57,6 +57,27 @@ namespace irc
 		QHash<char, quint8> _supportedRoles;
 	};
 
+	/// Get the most significant bit
+	quint8 uint8_msb(quint8 role);
+
+	inline char
+	Role::to_prefix(quint8 role)
+	{
+		return _supportedRoles.key(role, 0);
+	}
+
+	inline quint8
+	Role::from_prefix(char prefix)
+	{
+		return _supportedRoles.value(prefix, 0);
+	}
+
+	inline char
+	Role::from_mode(char mode)
+	{
+		return _supportedPrefixes.value(mode, 0);
+	}
+
 	inline quint8
 	uint8_msb(quint8 role)
 	{
