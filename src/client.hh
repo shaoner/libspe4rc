@@ -93,7 +93,9 @@ namespace irc
 		void onQuit(CommandEvent& event, const QString& reason);
 
 		void onChannelMessage(CommandEvent& event, const QString& target, const QString& msg);
-		void onPrivateMessage(CommandEvent& event, const QString& target, const QString& msg);
+		void onChannelAction(CommandEvent& event, const QString& target, const QString& msg);
+		void onPrivateMessage(CommandEvent& event, const QString& msg);
+		void onPrivateAction(CommandEvent& event, const QString& msg);
 
 		void onJoin(CommandEvent& event, const QString& channel);
 		void onPart(CommandEvent& event, const QString& channel, const QString& reason);
@@ -118,6 +120,7 @@ namespace irc
 		void on_socket_disconnect();
 		void on_irc_data(Message& message);
 	private:
+		void process_privmsg(CommandEvent& event, const QString& target, const QString& msg);
 		void process_mode_channel(CommandEvent& event, const QString& channel, const QString& modes, const QStringList& args);
 		void process_raw_data(Message& message);
 		void process_server_params(const QStringList& serverParams);

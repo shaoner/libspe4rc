@@ -124,11 +124,7 @@ namespace irc
 			}
 			else if ((message.commandName == "PRIVMSG") && (message.params.count() > 1))
 			{
-				const QString& target = message.params[0];
-				if (is_channel(target))
-					emit onChannelMessage(event, target, message.params[1]);
-				else
-					emit onPrivateMessage(event, target, message.params[1]);
+				process_privmsg(event, message.params[0], message.params[1]);
 			}
 			else if ((message.commandName == "JOIN") && (message.params.count() > 0))
 			{
@@ -261,6 +257,48 @@ namespace irc
 
 		}
 		emit onChannelMode(event, channel, modes, modeArgs);
+	}
+
+	void
+	Client::process_privmsg(CommandEvent& event, const QString& target, const QString& msg)
+	{
+		QString message = msg;
+		// CTCP
+		if ((message.startsWith("\001") && message.endsWith("\001")))
+		{
+			// message length >= 2
+			message = message.mid(1, message.size() - 2);
+			// DCC
+			if (message.startsWith("DCC"))
+			{
+				message.mid(3);
+				/*
+				 * TODO: Emit dcc
+				 */
+			}
+			else if (message.startsWith("ACTION"))
+			{
+				message = message.mid(6);
+				if (target == _nickname)
+					emit onPrivateAction(event, message);
+				else // if (is_channel(target))
+					emit onChannelAction(event, target, message);
+
+			}
+			else
+			{
+				/*
+				 * TODO: Emit ctcp
+				 */
+			}
+		}
+		else
+		{
+			if (target == _nickname)
+				emit onPrivateMessage(event, message);
+			else // if (is_channel(target))
+				emit onChannelMessage(event, target, message);
+		}
 	}
 
 	void
