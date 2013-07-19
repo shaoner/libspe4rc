@@ -58,6 +58,7 @@ namespace irc
 		int write(const QString& message) const;
 		bool connection_established() const;
 		bool is_connected() const;
+		bool is_disconnected() const;
 		bool is_connecting() const;
 	signals:
 		void onSocketConnect();
@@ -94,6 +95,12 @@ namespace irc
 	Connector::is_connected() const
 	{
 		return (connection_established() && _connected);
+	}
+
+	inline bool
+	Connector::is_disconnected() const
+	{
+		return (_socket->state() == QAbstractSocket::UnconnectedState);
 	}
 
 	inline bool

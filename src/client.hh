@@ -176,7 +176,7 @@ namespace irc
 		if (!nickname.isEmpty())
 		{
 			_nickname = nickname;
-			if (connection_established())
+			if (!is_disconnected())
 				write("NICK " + nickname);
 		}
 	}
@@ -191,14 +191,14 @@ namespace irc
 	inline void
 	Client::change_user(const QString& user)
 	{
-		if (!user.isEmpty())
+		if (!user.isEmpty() && !connection_established())
 			_user = user;
 	}
 
 	inline void
 	Client::change_realname(const QString& realname)
 	{
-		if (!realname.isEmpty())
+		if (!realname.isEmpty() && !connection_established())
 			_realname = realname;
 	}
 
