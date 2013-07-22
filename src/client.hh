@@ -68,7 +68,6 @@ namespace irc
 		void join(const QStringList& channels) const;
 		void join(const QString& channel) const;
 		void part(const QString& channel, const QString& reason = "") const;
-
 		/// Client parameters
 		void change_nickname(const QString& nickname);
 		void add_altnickname(const QString& nickname);
@@ -158,7 +157,7 @@ namespace irc
 	inline void
 	Client::join(const QString& channel) const
 	{
-		write("JOIN " + channel);
+		join(channel.split(','));
 	}
 
 	inline void
