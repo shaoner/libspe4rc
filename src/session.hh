@@ -57,6 +57,8 @@ namespace irc
 		Session& user(const QString& user);
 		Session& realname(const QString& user);
 		Session& altnickname(const QString& nickname);
+		Session& invisible();
+		Session& receiveWallops();
 		const QString& name() const;
 		const QString& hostname() const;
 		quint16 port() const;
@@ -74,6 +76,7 @@ namespace irc
 		QString _user;
 		QString _realname;
 		QStringList _altnickname;
+		quint8 _umode;
 	};
 
 	inline Session&
@@ -123,6 +126,20 @@ namespace irc
 	Session::altnickname(const QString& nickname)
 	{
 		_altnickname.append(nickname);
+		return *this;
+	}
+
+	inline Session&
+	Session::invisible()
+	{
+		_umode |= 0x8;
+		return *this;
+	}
+
+	inline Session&
+	Session::receiveWallops()
+	{
+		_umode |= 0x4;
 		return *this;
 	}
 

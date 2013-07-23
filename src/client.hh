@@ -135,6 +135,7 @@ namespace irc
 		QStringList _altnickname;
 		QString _user;
 		QString _realname;
+		quint8 _umode;
 		QHash<QString, UserList*> _channels;
 		QString _channelPrefixes;
 	};

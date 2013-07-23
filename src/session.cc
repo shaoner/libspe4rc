@@ -37,7 +37,8 @@ namespace irc
 		_password(""),
 		_nickname(""),
 		_user(""),
-		_realname("")
+		_realname(""),
+		_umode(0)
 	{
 	}
 

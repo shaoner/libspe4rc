@@ -39,7 +39,8 @@ namespace irc
 		_nickname(session._nickname),
 		_altnickname(session._altnickname),
 		_user(session._user),
-		_realname(session._realname)
+		_realname(session._realname),
+		_umode(session._umode)
 	{
 		// Socket events
 		connect(this, SIGNAL(onSocketConnect()), this, SLOT(on_socket_connect()));
@@ -85,7 +86,7 @@ namespace irc
 		if (!_password.isEmpty())
 			write("PASS " + _password);
 		write("NICK " + _nickname);
-		write("USER " + _user + " 8 * :" + _realname);
+		write("USER " + _user + " " + _umode + " * :" + _realname);
 	}
 
 	void
