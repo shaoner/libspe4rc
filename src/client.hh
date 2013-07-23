@@ -65,9 +65,18 @@ namespace irc
 		void stop();
 		/// Commands
 		void msg(const QString& target, const QString& message) const;
-		void join(const QStringList& channels) const;
-		void join(const QString& channel) const;
+		void action(const QString& target, const QString& message) const;
+		void notice(const QString& target, const QString& message) const;
+		void join(const QString& channels, const QString& keys = "") const;
 		void part(const QString& channel, const QString& reason = "") const;
+		void quit(const QString& reason = "") const;
+		void kick(const QString& channel, const QString& nick, const QString& reason = "") const;
+		void invite(const QString& nick, const QString& channel) const;
+		void mode(const QString& target, const QString& mode = "", const QString& modeParams = "") const;
+		void topic(const QString& channel, const QString& topic = "") const;
+		void cleartopic(const QString& channel) const;
+		void whois(const QString& nicks) const;
+		void names(const QString& channel) const;
 		/// Client parameters
 		void change_nickname(const QString& nickname);
 		void add_altnickname(const QString& nickname);
@@ -147,27 +156,95 @@ namespace irc
 	}
 
 	inline void
-	Client::join(const QStringList& channels) const
+	Client::action(const QString& target, const QString& message) const
 	{
-		foreach (QString channel, channels)
-		{
-			write("JOIN " + channel);
-		}
+		write("PRIVMSG " + target + " :\001ACTION " + message + "\001");
 	}
 
 	inline void
-	Client::join(const QString& channel) const
+	Client::notice(const QString& target, const QString& message) const
 	{
-		join(channel.split(','));
+		write("NOTICE " + target + " :" + message);
 	}
 
 	inline void
-	Client::part(const QString& channel, const QString& reason) const
+	Client::join(const QString& channels, const QString& keys) const
+	{
+		if (keys.isEmpty())
+			write("JOIN " + channels);
+		else
+			write("JOIN " + channels + " " + keys);
+	}
+
+	inline void
+	Client::part(const QString& channels, const QString& reason) const
 	{
 		if (reason.isEmpty())
-			write("PART " + channel);
+			write("PART " + channels);
 		else
-			write("PART " + channel + " :" + reason);
+			write("PART " + channels + " :" + reason);
+	}
+
+	inline void
+	Client::quit(const QString& reason) const
+	{
+		if (reason.isEmpty())
+			write("QUIT");
+		else
+			write("QUIT :" + reason);
+	}
+
+	inline void
+	Client::kick(const QString& channels, const QString& nicks, const QString& reason) const
+	{
+		if (reason.isEmpty())
+			write("KICK " + channels + " " + nicks);
+		else
+			write("KICK " + channels + " " + nicks + " :" + reason);
+	}
+
+	inline void
+	Client::invite(const QString& nick, const QString& channel) const
+	{
+		write("INVITE " + nick + " " + channel);
+	}
+
+	inline void
+	Client::mode(const QString& target, const QString& mode, const QString& modeParams) const
+	{
+		if (mode.isEmpty())
+			write("MODE " + target);
+		else if (modeParams.isEmpty())
+			write("MODE " + target + " " + mode);
+		else
+			write("MODE " + target + " " + mode + " " + modeParams);
+	}
+
+	inline void
+	Client::topic(const QString& channel, const QString& topic) const
+	{
+		if (topic.isEmpty())
+			write("TOPIC " + channel);
+		else
+			write("TOPIC " + channel + " :" + topic);
+	}
+
+	inline void
+	Client::cleartopic(const QString& channel) const
+	{
+		write("TOPIC " + channel + " :");
+	}
+
+	inline void
+	Client::whois(const QString& nicks) const
+	{
+		write("WHOIS " + nicks);
+	}
+
+	inline void
+	Client::names(const QString& channels) const
+	{
+		write("NAMES " + channels);
 	}
 
 	inline void
