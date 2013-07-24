@@ -86,7 +86,7 @@ namespace irc
 		if (!_password.isEmpty())
 			write("PASS " + _password);
 		write("NICK " + _nickname);
-		write("USER " + _user + " " + _umode + " * :" + _realname);
+		write("USER " + _user + " " + QString::number(_umode) + " * :" + _realname);
 	}
 
 	void
