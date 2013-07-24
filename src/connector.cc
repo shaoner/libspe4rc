@@ -131,7 +131,6 @@ namespace irc
 				emit onError(UNKNOWN_ERROR);
 				return;
 		}
-		emit onSocketDisconnect();
 	}
 
 } // namespace irc
