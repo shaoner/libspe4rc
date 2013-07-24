@@ -72,7 +72,7 @@ namespace irc
 		void quit(const QString& reason = "") const;
 		void kick(const QString& channel, const QString& nick, const QString& reason = "") const;
 		void invite(const QString& nick, const QString& channel) const;
-		void mode(const QString& target, const QString& mode = "", const QString& modeParams = "") const;
+		void mode(const QString& target, const QString& mode = "") const;
 		void topic(const QString& channel, const QString& topic = "") const;
 		void cleartopic(const QString& channel) const;
 		void whois(const QString& nicks) const;
@@ -210,14 +210,12 @@ namespace irc
 	}
 
 	inline void
-	Client::mode(const QString& target, const QString& mode, const QString& modeParams) const
+	Client::mode(const QString& target, const QString& mode) const
 	{
 		if (mode.isEmpty())
 			write("MODE " + target);
-		else if (modeParams.isEmpty())
-			write("MODE " + target + " " + mode);
 		else
-			write("MODE " + target + " " + mode + " " + modeParams);
+			write("MODE " + target + " " + mode);
 	}
 
 	inline void
