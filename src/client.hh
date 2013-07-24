@@ -147,6 +147,7 @@ namespace irc
 		quint8 _umode;
 		QHash<QString, UserList*> _channels;
 		QString _channelPrefixes;
+		bool _uListCreating;
 	};
 
 	inline void

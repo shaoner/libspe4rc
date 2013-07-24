@@ -40,7 +40,8 @@ namespace irc
 		_altnickname(session._altnickname),
 		_user(session._user),
 		_realname(session._realname),
-		_umode(session._umode)
+		_umode(session._umode),
+		_uListCreating(false)
 	{
 		// Socket events
 		connect(this, SIGNAL(onSocketConnect()), this, SLOT(on_socket_connect()));
@@ -132,7 +133,10 @@ namespace irc
 				const QString& channel = message.params[0];
 				// If the client join, add the channel to the channel list
 				if (event.nick() == _nickname)
+				{
 					_channels.insert(channel, new UserList());
+					_uListCreating = true;
+				}
 				// Add the new user to the channel
 				else if (_channels.contains(channel))
 					_channels[channel]->add(event.nick());
@@ -324,7 +328,7 @@ namespace irc
 			// NAME
 			case RPL_NAMREPLY:
 			{
-				if (message.params.count() > 2)
+				if ((_uListCreating) && (message.params.count() > 2))
 				{
 					const QString& channel = message.params[1];
 					const QStringList& nicks = message.params[2].split(' ');
@@ -342,15 +346,21 @@ namespace irc
 							users->add(nick);
 						}
 					}
+					return;
 				}
 				break;
 			}
 			case RPL_ENDOFNAMES:
 			{
-				const QString& channel = message.params[0];
-				if (_channels.contains(channel))
+				if (_uListCreating)
 				{
-					emit onUserList(channel, _channels[channel]);
+					const QString& channel = message.params[0];
+					if (_channels.contains(channel))
+					{
+						emit onUserList(channel, _channels[channel]);
+					}
+					_uListCreating = false;
+					return;
 				}
 				break;
 			}
