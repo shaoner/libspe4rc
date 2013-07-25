@@ -122,6 +122,7 @@ namespace irc
 		void onChangeTopic(CommandEvent& event, const QString& channel, const QString& subject);
 		void onTopic(const QString& channel, const QString& topic);
 		void onTopicInfo(const QString& channel, const QString& author, uint date);
+		void onNoTopic(const QString& channel, const QString& msg);
 	private slots:
 		/// Socket event listeners
 		void on_socket_connect();

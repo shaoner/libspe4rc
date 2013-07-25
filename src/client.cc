@@ -368,14 +368,30 @@ namespace irc
 			case RPL_TOPIC:
 			{
 				if (message.params.count() > 1)
+				{
 					emit onTopic(message.params[0], message.params[1]);
+					return;
+				}
 				break;
 			}
 			// Topic additional infos
 			case RPL_TOPICINFO:
 			{
 				if (message.params.count() > 2)
+				{
 					emit onTopicInfo(message.params[0], message.params[1], message.params[2].toUInt());
+					return;
+				}
+				break;
+			}
+			// No topic
+			case RPL_NOTOPIC:
+			{
+				if (message.params.count() > 1)
+				{
+					emit onNoTopic(message.params[0], message.params[1]);
+					return;
+				}
 				break;
 			}
 			// Alternative nicknames
@@ -388,8 +404,8 @@ namespace irc
 					{
 						change_nickname(_altnickname[altIdx++]);
 					}
-					break;
 				}
+				break;
 			}
 		}
 		emit onRaw(event);
