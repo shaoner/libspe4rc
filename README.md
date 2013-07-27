@@ -49,6 +49,7 @@ make
 ## How to use it?
 
 ```c++
+#include <spe4rc>
 
 class MyIrcClient : public QObject
 {

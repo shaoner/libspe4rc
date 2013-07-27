@@ -1,0 +1,11 @@
+#ifndef IRC_SPE4RC
+# define IRC_SPE4RC
+
+# include "session.hh"
+# include "user-list.hh"
+# include "user.hh"
+# include "role.hh"
+# include "command-event.hh"
+# include "raw-event.hh"
+
+#endif /* !IRC_SPE4RC */
