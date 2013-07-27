@@ -252,9 +252,12 @@ namespace irc
 	{
 		if (!nickname.isEmpty())
 		{
-			_nickname = nickname;
 			if (!is_disconnected())
 				write("NICK " + nickname);
+			// To avoid setting a nickname already in use or with a bad syntax
+			// In this case, _nickname is set during the onNick event
+			if (!is_connected())
+				_nickname = nickname;
 		}
 	}
 
