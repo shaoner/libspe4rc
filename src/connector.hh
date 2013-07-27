@@ -25,13 +25,12 @@
  * \brief Handle the network communication
  */
 
-#ifndef COM_CONNECTOR_HH
-# define COM_CONNECTOR_HH
+#ifndef IRC_CONNECTOR_HH
+# define IRC_CONNECTOR_HH
 
 # include <QTcpSocket>
 
 # include "parser.hh"
-# include "message.hh"
 # include "irc-error.hh"
 
 /// IRC Message delimiter
@@ -39,6 +38,8 @@
 
 namespace irc
 {
+
+	class Message;
 
 	/*!
 	 * \class Connector
@@ -112,4 +113,4 @@ namespace irc
 
 } // namespace irc
 
-#endif /* !COM_CONNECTOR_HH */
+#endif /* !IRC_CONNECTOR_HH */

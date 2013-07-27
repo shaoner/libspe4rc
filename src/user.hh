@@ -25,8 +25,8 @@
  * \brief IRC user
  */
 
-#ifndef COM_USER_HH
-# define COM_USER_HH
+#ifndef IRC_USER_HH
+# define IRC_USER_HH
 
 # include <QString>
 
@@ -114,4 +114,4 @@ namespace irc
 
 } // namespace irc
 
-#endif /* !COM_USER_HH */
+#endif /* !IRC_USER_HH */

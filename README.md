@@ -59,29 +59,32 @@ class MyIrcClient : public QObject
 	{
 	    // Init a session
 
-		Client client = Session("spe4k")
-			   		  	.hostname("irc.spe4k.com"),
-					   	.port(6667)
-						.password("")
-						.nickname("shaoner")
-						.altnickname("shaoner1")
-						.altnickname("shaoner2")
-						.altnickname("shaoner3")
-						.user("shaoner")
-						.realname("we do not break userspace MAURO")
+		irc::Session session = irc::SessionParameters("spe4k")
+										.hostname("irc.spe4k.com"),
+										.port(6667)
+										.password("")
+										.nickname("shaoner")
+										.altnickname("shaoner1")
+										.altnickname("shaoner2")
+										.altnickname("shaoner3")
+										.user("shaoner")
+										.realname("we do not break userspace MAURO")
+										.invisible()
+										.receiveWallops()
+
 		// Attach to some event listeners
-		connect(client, SIGNAL(onJoin(CommandEvent&, const QString&)), this, SLOT(on_join(CommandEvent& event, const QString&)));
-		connect(client, SIGNAL(onKick(CommandEvent&, const QString&, const QString&, const QString&)),
+		connect(session, SIGNAL(onJoin(CommandEvent&, const QString&)), this, SLOT(on_join(CommandEvent& event, const QString&)));
+		connect(session, SIGNAL(onKick(CommandEvent&, const QString&, const QString&, const QString&)),
 				this, SLOT(on_kick(CommandEvent& event, const QString&, const QString&, const QString&)));
-        client.start();
+        session.start();
 		// ...
 	}
 
 	// on join event listener
    	void on_join(CommandEvent& event, const QString& channel)
    	{
-		qDebug() << "You can access the associated client session through event.client()";
-		qDebug() << "Hello " << event.client().nickname();
+		qDebug() << "You can access the associated client session through event.session()";
+		qDebug() << "Hello " << event.session().nickname();
 		qDebug() << "* " << event.nick() << " has joined " << channel;
    	}
 

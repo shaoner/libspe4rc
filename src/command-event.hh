@@ -25,8 +25,8 @@
  * \brief IRC event command
  */
 
-#ifndef COM_COMMAND_EVENT_HH
-# define COM_COMMAND_EVENT_HH
+#ifndef IRC_COMMAND_EVENT_HH
+# define IRC_COMMAND_EVENT_HH
 
 # include "event.hh"
 # include "message.hh"
@@ -42,7 +42,7 @@ namespace irc
 	{
 	public:
 		/// Ctor
-		CommandEvent(Message& message, Client* client);
+		CommandEvent(Message& message, Session* session);
 	public:
 		/// Get client info
 		const QString& nick() const;
@@ -53,6 +53,15 @@ namespace irc
 		const QString& _user;
 		const QString& _host;
 	};
+
+	inline
+	CommandEvent::CommandEvent(Message& message, Session* session) :
+		Event(session),
+		_nick(message.nick),
+		_user(message.user),
+		_host(message.host)
+	{
+	}
 
 	inline const QString&
 	CommandEvent::nick() const
@@ -74,4 +83,4 @@ namespace irc
 
 } // namespace irc
 
-#endif /* !COM_COMMAND_EVENT_HH */
+#endif /* !IRC_COMMAND_EVENT_HH */

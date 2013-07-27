@@ -18,7 +18,6 @@ MOC_DIR = ./build/src
 # Sources
 INCLUDEPATH += src
 HEADERS += \
-	src/client.hh \
 	src/command-event.hh \
 	src/connector.hh \
     src/event.hh \
@@ -28,17 +27,15 @@ HEADERS += \
     src/raw-event.hh \
 	src/role.hh \
 	src/session.hh \
+	src/session.hxx \
+	src/session-parameters.hh \
+	src/session-parameters.hxx \
 	src/user.hh \
 	src/user-list.hh
 
 SOURCES += \
-	src/client.cc \
-	src/command-event.cc \
 	src/connector.cc \
-    src/event.cc \
-    src/message.cc \
     src/parser.cc \
-    src/raw-event.cc \
 	src/role.cc \
 	src/session.cc \
 	src/user.cc \

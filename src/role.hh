@@ -25,8 +25,8 @@
  * \brief An IRC channel role helper
  */
 
-#ifndef COM_ROLE_HH
-# define COM_ROLE_HH
+#ifndef IRC_ROLE_HH
+# define IRC_ROLE_HH
 
 # include <QHash>
 
@@ -89,4 +89,4 @@ namespace irc
 
 } // namespace irc
 
-#endif /* !COM_ROLE_HH */
+#endif /* !IRC_ROLE_HH */

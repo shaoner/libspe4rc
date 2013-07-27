@@ -25,13 +25,13 @@
  * \brief IRC event interface
  */
 
-#ifndef COM_EVENT_HH
-# define COM_EVENT_HH
+#ifndef IRC_EVENT_HH
+# define IRC_EVENT_HH
 
 namespace irc
 {
 
-	class Client;
+	class Session;
 
 	/*!
 	 * \class Event
@@ -41,21 +41,27 @@ namespace irc
 	{
 	public:
 		/// Ctor
-		Event(Client* client);
+		Event(Session* session);
 
 	protected:
-		/// Get associated irc client session
-		const Client& client() const;
+		/// Get associated irc session session
+		const Session& session() const;
 	private:
-		Client& _client;
+		Session& _session;
 	};
 
-	inline const Client&
-	Event::client() const
+	inline
+	Event::Event(Session* session) :
+		_session(*session)
 	{
-		return _client;
+	}
+
+	inline const Session&
+	Event::session() const
+	{
+		return _session;
 	}
 
 } // namespace irc
 
-#endif /* !COM_EVENT_HH */
+#endif /* !IRC_EVENT_HH */

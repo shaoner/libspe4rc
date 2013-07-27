@@ -22,169 +22,136 @@
 /*!
  * \file session.hh
  * \author shaoner
- * \brief Client parameters
+ * \brief An IRC session
  */
 
-#ifndef SESSION_HH
-# define SESSION_HH
+#ifndef IRC_SESSION_HH
+# define IRC_SESSION_HH
 
 # include <QString>
 # include <QStringList>
+# include <QHash>
 
-/// The default IRC port
-# define DEFAULT_PORT 6667
+# include "session-parameters.hh"
+# include "connector.hh"
 
 namespace irc
 {
 
-	class Client;
+	class UserList;
+	class CommandEvent;
+	class RawEvent;
 
 	/*!
 	 * \class Session
-	 * \brief Named parameter idiom for Client
+	 * \brief This class represents an IRC client session
 	 */
-	class Session
+	class Session : public Connector
 	{
+		Q_OBJECT
+
 	public:
-		/// Ctor
-		explicit Session(const QString& name);
+        /// Ctor
+		Session(const SessionParameters& sessionParam);
+		/// Dtor
+		~Session();
 	public:
-		/// Parameters
-		Session& hostname(const QString& hostname);
-		Session& port(quint16 port);
-		Session& password(const QString& password);
-		Session& nickname(const QString& nickname);
-		Session& user(const QString& user);
-		Session& realname(const QString& user);
-		Session& altnickname(const QString& nickname);
-		Session& invisible();
-		Session& receiveWallops();
-		const QString& name() const;
-		const QString& hostname() const;
-		quint16 port() const;
-		const QString& password() const;
+		/// Connection
+		void start();
+		void start(const QString& hostname,
+				   quint16 port = DEFAULT_IRC_PORT,
+				   const QString& password = "");
+		void stop();
+		/// Commands
+		void msg(const QString& target, const QString& message) const;
+		void action(const QString& target, const QString& message) const;
+		void notice(const QString& target, const QString& message) const;
+		void join(const QString& channels, const QString& keys = "") const;
+		void part(const QString& channel, const QString& reason = "") const;
+		void quit(const QString& reason = "") const;
+		void kick(const QString& channel, const QString& nick, const QString& reason = "") const;
+		void invite(const QString& nick, const QString& channel) const;
+		void mode(const QString& target, const QString& mode = "") const;
+		void topic(const QString& channel, const QString& topic = "") const;
+		void cleartopic(const QString& channel) const;
+		void whois(const QString& nicks) const;
+		void names(const QString& channel) const;
+		/// Session parameters
+		void change_nickname(const QString& nickname);
+		void add_altnickname(const QString& nickname);
+		void change_user(const QString& user);
+		void change_realname(const QString& realname);
 		const QString& nickname() const;
 		const QString& user() const;
 		const QString& realname() const;
+		const QHash<QString, UserList*>& channels() const;
+		/// Server paramaters
+		const QString& name() const;
+		const QString& hostname() const;
+		quint16 port() const;
+		bool is_channel(const QString& channel) const;
+	signals:
+		/// Event notifiers
+		void onError();
+		void onConnect();
+		void onDisconnect();
+
+		void onPing(CommandEvent& event, const QString& server);
+		void onQuit(CommandEvent& event, const QString& reason);
+
+		void onChannelMessage(CommandEvent& event, const QString& target, const QString& msg);
+		void onChannelAction(CommandEvent& event, const QString& target, const QString& msg);
+		void onPrivateMessage(CommandEvent& event, const QString& msg);
+		void onPrivateAction(CommandEvent& event, const QString& msg);
+
+		void onJoin(CommandEvent& event, const QString& channel);
+		void onPart(CommandEvent& event, const QString& channel, const QString& reason);
+		void onKick(CommandEvent& event, const QString& channel, const QString& target, const QString& reason);
+
+		void onUserMode(CommandEvent& event, const QString& target, const QString& modes);
+		void onChannelMode(CommandEvent& event, const QString& channel, const QString& modes, const QStringList& args);
+		void onNick(CommandEvent& event, const QString& newNick);
+
+		void onNotice(CommandEvent& event, const QString& target, const QString& msg);
+		void onInvite(CommandEvent& event, const QString& target, const QString& channel);
+
+		void onRaw(RawEvent& event);
+		void onUserList(const QString& channel, UserList* users);
+
+		void onChangeTopic(CommandEvent& event, const QString& channel, const QString& subject);
+		void onTopic(const QString& channel, const QString& topic);
+		void onTopicInfo(const QString& channel, const QString& author, uint date);
+		void onNoTopic(const QString& channel, const QString& msg);
+	private slots:
+		/// Socket event listeners
+		void on_socket_connect();
+		void on_socket_disconnect();
+		void on_irc_data(Message& message);
 	private:
-		friend class Client;
+		void process_privmsg(CommandEvent& event, const QString& target, const QString& msg);
+		void process_mode_channel(CommandEvent& event, const QString& channel, const QString& modes, const QStringList& args);
+		void process_raw_data(Message& message);
+		void process_server_params(const QStringList& serverParams);
+		void clean();
+	private:
+		/// Server info
 		QString _name;
 		QString _hostname;
-		quint16 _port;
+		int _port;
 		QString _password;
+		/// User info
 		QString _nickname;
+		QStringList _altnickname;
 		QString _user;
 		QString _realname;
-		QStringList _altnickname;
 		quint8 _umode;
+		QHash<QString, UserList*> _channels;
+		QString _channelPrefixes;
+		bool _uListCreating;
 	};
-
-	inline Session&
-	Session::hostname(const QString& hostname)
-	{
-		_hostname = hostname;
-		return *this;
-	}
-
-	inline Session&
-	Session::port(quint16 port)
-	{
-		_port = port;
-		return *this;
-	}
-
-
-	inline Session&
-	Session::password(const QString& password)
-	{
-		_password = password;
-		return *this;
-	}
-
-	inline Session&
-	Session::nickname(const QString& nickname)
-	{
-		_nickname = nickname;
-		return *this;
-	}
-
-	inline Session&
-	Session::user(const QString& user)
-	{
-		_user = user;
-		return *this;
-	}
-
-	inline Session&
-	Session::realname(const QString& realname)
-	{
-		_realname = realname;
-		return *this;
-	}
-
-	inline Session&
-	Session::altnickname(const QString& nickname)
-	{
-		_altnickname.append(nickname);
-		return *this;
-	}
-
-	inline Session&
-	Session::invisible()
-	{
-		_umode |= 0x8;
-		return *this;
-	}
-
-	inline Session&
-	Session::receiveWallops()
-	{
-		_umode |= 0x4;
-		return *this;
-	}
-
-	inline const QString&
-	Session::name() const
-	{
-		return _name;
-	}
-
-	inline const QString&
-	Session::hostname() const
-	{
-		return _hostname;
-	}
-
-	inline quint16
-	Session::port() const
-	{
-		return _port;
-	}
-
-	inline const QString&
-	Session::password() const
-	{
-		return _password;
-	}
-
-	inline const QString&
-	Session::nickname() const
-	{
-		return _nickname;
-	}
-
-	inline const QString&
-	Session::user() const
-	{
-		return _user;
-	}
-
-	inline const QString&
-	Session::realname() const
-	{
-		return _realname;
-	}
 
 } // namespace irc
 
-#endif /* !SESSION_HH */
+# include "session.hxx"
+
+#endif /* !IRC_SESSION_HH */

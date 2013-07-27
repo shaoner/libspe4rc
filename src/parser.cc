@@ -26,6 +26,7 @@
  */
 
 #include "parser.hh"
+#include "message.hh"
 
 namespace irc
 {

@@ -25,8 +25,8 @@
  * \brief Channel userlist
  */
 
-#ifndef COM_USERLIST_HH
-# define COM_USERLIST_HH
+#ifndef IRC_USERLIST_HH
+# define IRC_USERLIST_HH
 
 # include <QString>
 # include <QHash>
@@ -64,4 +64,4 @@ namespace irc
 
 } // namespace irc
 
-#endif /* !COM_USERLIST_HH */
+#endif /* !IRC_USERLIST_HH */

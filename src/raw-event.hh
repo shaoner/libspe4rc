@@ -25,8 +25,8 @@
  * \brief Raw IRC event
  */
 
-#ifndef COM_RAW_EVENT_HH
-# define COM_RAW_EVENT_HH
+#ifndef IRC_RAW_EVENT_HH
+# define IRC_RAW_EVENT_HH
 
 # include <QStringList>
 # include <QString>
@@ -197,7 +197,7 @@ namespace irc
 	{
 	public:
 		/// Ctor
-		RawEvent(Message& message, Client* client);
+		RawEvent(Message& message, Session* session);
 	public:
 		/// Get the raw number
 		quint16 raw() const;
@@ -210,6 +210,16 @@ namespace irc
 		QString _target;
 		QString _msg;
 	};
+
+	inline
+	RawEvent::RawEvent(Message& message, Session* session) :
+		Event(session),
+		_raw(message.rawNumber),
+		_target(message.params[0])
+	{
+		message.params.takeFirst();
+		_msg = message.params.join(" ");
+	}
 
 	inline quint16
 	RawEvent::raw() const
@@ -231,4 +241,4 @@ namespace irc
 
 } // namespace irc
 
-#endif /* !COM_RAW_EVENT_HH */
+#endif /* !IRC_RAW_EVENT_HH */

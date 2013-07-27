@@ -26,6 +26,7 @@
  */
 
 #include "connector.hh"
+#include "message.hh"
 
 namespace irc
 {

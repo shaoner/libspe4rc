@@ -26,6 +26,7 @@
  */
 
 #include "user.hh"
+#include "role.hh"
 
 namespace irc
 {

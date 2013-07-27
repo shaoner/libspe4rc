@@ -25,12 +25,10 @@
  * \brief Parser for IRC message
  */
 
-#ifndef COM_PARSER_HH
-# define COM_PARSER_HH
+#ifndef IRC_PARSER_HH
+# define IRC_PARSER_HH
 
 # include <QString>
-
-# include "message.hh"
 
 /*!
  *
@@ -63,6 +61,9 @@
 
 namespace irc
 {
+
+	class Message;
+
 	/*!
 	 * \class Parser
 	 * \brief This class is a SLR parser for the IRC grammar
@@ -112,4 +113,4 @@ namespace irc
 
 } // namespace irc
 
-#endif /* !COM_PARSER_HH */
+#endif /* !IRC_PARSER_HH */

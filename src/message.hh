@@ -25,8 +25,8 @@
  * \brief IRC Message
  */
 
-#ifndef COM_MESSAGE_HH
-# define COM_MESSAGE_HH
+#ifndef IRC_MESSAGE_HH
+# define IRC_MESSAGE_HH
 
 # include <QStringList>
 
@@ -68,6 +68,23 @@ namespace irc
 		quint16 rawNumber;
 	};
 
+	inline
+	Message::Message() :
+		isValid(false)
+	{
+	}
+
+	inline void
+	Message::clear()
+	{
+		nick.clear();
+		user.clear();
+		host.clear();
+		commandName.clear();
+		params.clear();
+		rawNumber = 0;
+	}
+
 } // namespace irc
 
-#endif /* !COM_MESSAGE_HH */
+#endif /* !IRC_MESSAGE_HH */
