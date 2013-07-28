@@ -96,29 +96,29 @@ namespace irc
 		void onConnect();
 		void onDisconnect();
 
-		void onPing(CommandEvent& event, const QString& server);
-		void onQuit(CommandEvent& event, const QString& reason);
+		void onPing(irc::CommandEvent& event, const QString& server);
+		void onQuit(irc::CommandEvent& event, const QString& reason);
 
-		void onChannelMessage(CommandEvent& event, const QString& target, const QString& msg);
-		void onChannelAction(CommandEvent& event, const QString& target, const QString& msg);
-		void onPrivateMessage(CommandEvent& event, const QString& msg);
-		void onPrivateAction(CommandEvent& event, const QString& msg);
+		void onChannelMessage(irc::CommandEvent& event, const QString& target, const QString& msg);
+		void onChannelAction(irc::CommandEvent& event, const QString& target, const QString& msg);
+		void onPrivateMessage(irc::CommandEvent& event, const QString& msg);
+		void onPrivateAction(irc::CommandEvent& event, const QString& msg);
 
-		void onJoin(CommandEvent& event, const QString& channel);
-		void onPart(CommandEvent& event, const QString& channel, const QString& reason);
-		void onKick(CommandEvent& event, const QString& channel, const QString& target, const QString& reason);
+		void onJoin(irc::CommandEvent& event, const QString& channel);
+		void onPart(irc::CommandEvent& event, const QString& channel, const QString& reason);
+		void onKick(irc::CommandEvent& event, const QString& channel, const QString& target, const QString& reason);
 
-		void onUserMode(CommandEvent& event, const QString& target, const QString& modes);
-		void onChannelMode(CommandEvent& event, const QString& channel, const QString& modes, const QStringList& args);
-		void onNick(CommandEvent& event, const QString& newNick);
+		void onUserMode(irc::CommandEvent& event, const QString& target, const QString& modes);
+		void onChannelMode(irc::CommandEvent& event, const QString& channel, const QString& modes, const QStringList& args);
+		void onNick(irc::CommandEvent& event, const QString& newNick);
 
-		void onNotice(CommandEvent& event, const QString& target, const QString& msg);
-		void onInvite(CommandEvent& event, const QString& target, const QString& channel);
+		void onNotice(irc::CommandEvent& event, const QString& target, const QString& msg);
+		void onInvite(irc::CommandEvent& event, const QString& target, const QString& channel);
 
-		void onRaw(RawEvent& event);
-		void onUserList(const QString& channel, UserList* users);
+		void onRaw(irc::RawEvent& event);
+		void onUserList(const QString& channel, irc::UserList* users);
 
-		void onChangeTopic(CommandEvent& event, const QString& channel, const QString& subject);
+		void onChangeTopic(irc::CommandEvent& event, const QString& channel, const QString& subject);
 		void onTopic(const QString& channel, const QString& topic);
 		void onTopicInfo(const QString& channel, const QString& author, uint date);
 		void onNoTopic(const QString& channel, const QString& msg);
