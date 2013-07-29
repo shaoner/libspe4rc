@@ -27,6 +27,10 @@
 
 #include "user-list.hh"
 
+#include <QString>
+
+#include "user.hh"
+
 namespace irc
 {
 

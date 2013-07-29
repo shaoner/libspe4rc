@@ -28,13 +28,14 @@
 #ifndef IRC_USERLIST_HH
 # define IRC_USERLIST_HH
 
-# include <QString>
 # include <QHash>
 
-# include "user.hh"
+class QString;
 
 namespace irc
 {
+
+	class User;
 
 	/*!
 	 * \class UserList

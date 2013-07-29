@@ -28,7 +28,6 @@
 #ifndef IRC_RAW_EVENT_HH
 # define IRC_RAW_EVENT_HH
 
-# include <QStringList>
 # include <QString>
 
 # include "message.hh"
