@@ -63,19 +63,43 @@ namespace irc
 				   const QString& password = "");
 		void stop();
 		/// Commands
-		void msg(const QString& target, const QString& message) const;
 		void action(const QString& target, const QString& message) const;
-		void notice(const QString& target, const QString& message) const;
-		void join(const QString& channels, const QString& keys = "") const;
-		void part(const QString& channel, const QString& reason = "") const;
-		void quit(const QString& reason = "") const;
-		void kick(const QString& channel, const QString& nick, const QString& reason = "") const;
-		void invite(const QString& nick, const QString& channel) const;
-		void mode(const QString& target, const QString& mode = "") const;
-		void topic(const QString& channel, const QString& topic = "") const;
+		void admin(const QString& target = "") const;
+		void away(const QString& reason = "") const;
 		void cleartopic(const QString& channel) const;
-		void whois(const QString& nicks) const;
+		void die() const; //
+		void info(const QString& server = "") const;
+		void invite(const QString& nick, const QString& channel) const;
+		void join(const QString& channels, const QString& keys = "") const;
+		void kick(const QString& channel, const QString& nicks, const QString& reason = "") const;
+		void kill(const QString& nick, const QString& reason) const;
+		void knock(const QString& channel, const QString& message = "") const;
+		void links(const QString& server = "", const QString& mask = "") const;
+		void list(const QString& channels = "", const QString& server = "") const;
+		void lusers(const QString& mask = "", const QString& server = "") const;
+		void mode(const QString& target, const QString& mode = "") const;
+		void motd(const QString& server = "") const; //
 		void names(const QString& channel) const;
+		void nick(const QString& newNick);
+		void notice(const QString& target, const QString& message) const;
+		void oper(const QString& login, const QString& password) const;
+		void part(const QString& channels, const QString& reason = "") const;
+		void privmsg(const QString& target, const QString& message) const;
+		void quit(const QString& reason = "") const;
+		void rehash() const;
+		void restart() const;
+		void serverconnect(const QString& server, const QString& port, const QString& remote = "") const;
+		void squit(const QString& server, const QString& comment) const;
+		void stats(const QString& query = "", const QString& server = "") const;
+		void time(const QString& server = "") const;
+		void topic(const QString& channel, const QString& topic = "") const;
+		void trace(const QString& server = "") const;
+		void version(const QString& server = "") const;
+		void wallops(const QString& message) const;
+		void who(const QString& mask = "") const;
+		void whois(const QString& nicks) const;
+		void whowas(const QString& nicks, int count, const QString& server = "") const;
+		void whowas(const QString& nicks) const;
 		/// Session parameters
 		void change_nickname(const QString& nickname);
 		void add_altnickname(const QString& nickname);

@@ -34,81 +34,21 @@ namespace irc
 {
 
 	inline void
-	Session::msg(const QString& target, const QString& message) const
-	{
-		write("PRIVMSG " + target + " :" + message);
-	}
-
-	inline void
 	Session::action(const QString& target, const QString& message) const
 	{
 		write("PRIVMSG " + target + " :\001ACTION " + message + "\001");
 	}
 
 	inline void
-	Session::notice(const QString& target, const QString& message) const
+	Session::admin(const QString& target) const
 	{
-		write("NOTICE " + target + " :" + message);
+		write("ADMIN" + (target.isEmpty() ? "" : " " + target));
 	}
 
 	inline void
-	Session::join(const QString& channels, const QString& keys) const
+	Session::away(const QString& reason) const
 	{
-		if (keys.isEmpty())
-			write("JOIN " + channels);
-		else
-			write("JOIN " + channels + " " + keys);
-	}
-
-	inline void
-	Session::part(const QString& channels, const QString& reason) const
-	{
-		if (reason.isEmpty())
-			write("PART " + channels);
-		else
-			write("PART " + channels + " :" + reason);
-	}
-
-	inline void
-	Session::quit(const QString& reason) const
-	{
-		if (reason.isEmpty())
-			write("QUIT");
-		else
-			write("QUIT :" + reason);
-	}
-
-	inline void
-	Session::kick(const QString& channels, const QString& nicks, const QString& reason) const
-	{
-		if (reason.isEmpty())
-			write("KICK " + channels + " " + nicks);
-		else
-			write("KICK " + channels + " " + nicks + " :" + reason);
-	}
-
-	inline void
-	Session::invite(const QString& nick, const QString& channel) const
-	{
-		write("INVITE " + nick + " " + channel);
-	}
-
-	inline void
-	Session::mode(const QString& target, const QString& mode) const
-	{
-		if (mode.isEmpty())
-			write("MODE " + target);
-		else
-			write("MODE " + target + " " + mode);
-	}
-
-	inline void
-	Session::topic(const QString& channel, const QString& topic) const
-	{
-		if (topic.isEmpty())
-			write("TOPIC " + channel);
-		else
-			write("TOPIC " + channel + " :" + topic);
+		write("AWAY" + (reason.isEmpty() ? "" : " :" + reason));
 	}
 
 	inline void
@@ -118,15 +58,195 @@ namespace irc
 	}
 
 	inline void
-	Session::whois(const QString& nicks) const
+	Session::die() const
 	{
-		write("WHOIS " + nicks);
+		write("DIE");
+	}
+
+	inline void
+	Session::info(const QString& server) const
+	{
+		write("INFO" + (server.isEmpty() ? "" : " " + server));
+	}
+
+	inline void
+	Session::invite(const QString& nick, const QString& channel) const
+	{
+		write("INVITE " + nick + " " + channel);
+	}
+
+	inline void
+	Session::join(const QString& channels, const QString& keys) const
+	{
+		write("JOIN " + channels + (keys.isEmpty() ? "" : " " + keys));
+	}
+
+	inline void
+	Session::kick(const QString& channels, const QString& nicks, const QString& reason) const
+	{
+		write("KICK " + channels + " " + nicks + (reason.isEmpty() ? "" : " " + reason));
+	}
+
+	inline void
+	Session::kill(const QString& nick, const QString& reason) const
+	{
+		write("KILL " + nick + " " + reason);
+	}
+
+	inline void
+	Session::knock(const QString& channel, const QString& message) const
+	{
+		write("KNOCK " + channel + (message.isEmpty() ? "" : " " + message));
+	}
+
+	inline void
+	Session::links(const QString& server, const QString& mask) const
+	{
+		write("LINKS" + (server.isEmpty() ? "" : " " + server + (mask.isEmpty() ? "" : " " + mask)));
+	}
+
+	inline void
+	Session::list(const QString& channels, const QString& server) const
+	{
+		write("LIST" + (channels.isEmpty() ? "" : " " + channels + (server.isEmpty() ? "" : " " + server)));
+	}
+
+	inline void
+	Session::lusers(const QString& mask, const QString& server) const
+	{
+		write("LUSERS" + (mask.isEmpty() ? "" : " " + mask + (server.isEmpty() ? "" : " " + server)));
+	}
+
+	inline void
+	Session::mode(const QString& target, const QString& mode) const
+	{
+		write("MODE " + target + (mode.isEmpty() ? "" : " " + mode));
+	}
+
+	inline void
+	Session::motd(const QString& server) const
+	{
+		write("MOTD" + (server.isEmpty() ? "" : " " + server));
 	}
 
 	inline void
 	Session::names(const QString& channels) const
 	{
 		write("NAMES " + channels);
+	}
+
+	inline void
+	Session::nick(const QString& newNick)
+	{
+		change_nickname(newNick);
+	}
+
+	inline void
+	Session::notice(const QString& target, const QString& message) const
+	{
+		write("NOTICE " + target + " :" + message);
+	}
+
+	inline void
+	Session::part(const QString& channels, const QString& reason) const
+	{
+		write("PART " + channels + (reason.isEmpty() ? "" : " :" + reason));
+	}
+
+	inline void
+	Session::privmsg(const QString& target, const QString& message) const
+	{
+		write("PRIVMSG " + target + " :" + message);
+	}
+
+	inline void
+	Session::quit(const QString& reason) const
+	{
+		write("QUIT" + (reason.isEmpty() ? "" : " :" + reason));
+	}
+
+	inline void
+	Session::rehash() const
+	{
+		write("REHASH");
+	}
+
+	inline void
+	Session::restart() const
+	{
+		write("RESTART");
+	}
+
+	inline void
+	Session::serverconnect(const QString& server, const QString& port, const QString& remote) const
+	{
+		write("CONNECT " + server + " " + port + (remote.isEmpty() ? "" : " " + remote));
+	}
+
+	inline void
+	Session::squit(const QString& server, const QString& comment) const
+	{
+		write("SQUIT " + server + " " + comment);
+	}
+
+	inline void
+	Session::stats(const QString& query, const QString& server) const
+	{
+		write("STATS" + (query.isEmpty() ? "" : " " + query + (server.isEmpty() ? "" : " " + server)));
+	}
+
+	inline void
+	Session::time(const QString& server) const
+	{
+		write("TIME" + (server.isEmpty() ? "" : " " + server));
+	}
+
+	inline void
+	Session::topic(const QString& channel, const QString& topic) const
+	{
+		write("TOPIC " + channel + (topic.isEmpty() ? "" : " :" + topic));
+	}
+
+	inline void
+	Session::trace(const QString& server) const
+	{
+		write("TRACE" + (server.isEmpty() ? "" : " " + server));
+	}
+
+	inline void
+	Session::version(const QString& server) const
+	{
+		write("VERSION" + (server.isEmpty() ? "" : " " + server));
+	}
+
+	inline void
+	Session::wallops(const QString& message) const
+	{
+		write("WALLOPS :" + message);
+	}
+
+	inline void
+	Session::who(const QString& mask) const
+	{
+		write("WHO " + mask);
+	}
+
+	inline void
+	Session::whois(const QString& nicks) const
+	{
+		write("WHOIS " + nicks);
+	}
+
+	inline void
+	Session::whowas(const QString& nicks) const
+	{
+		write("WHOWAS " + nicks);
+	}
+
+	inline void
+	Session::whowas(const QString& nicks, int count, const QString& server) const
+	{
+		write("WHOWAS " + nicks + " " + QString::number(count) + (server.isEmpty() ? "" : " " + server));
 	}
 
 	inline void
