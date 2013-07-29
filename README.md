@@ -99,7 +99,7 @@ class MyIrcClient : public QObject
 
 ## License
 
-LGPL
+GPL
 
 ## Authors
 
