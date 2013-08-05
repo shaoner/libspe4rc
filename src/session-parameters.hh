@@ -66,6 +66,7 @@ namespace irc
 		const QString& nickname() const;
 		const QString& user() const;
 		const QString& realname() const;
+		const QStringList& altnickname() const;
 	private:
 		friend class Session;
 		QString _name;

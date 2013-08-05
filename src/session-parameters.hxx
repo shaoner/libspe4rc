@@ -153,6 +153,12 @@ namespace irc
 		return _realname;
 	}
 
+	inline const QStringList&
+	SessionParameters::altnickname() const
+	{
+		return _altnickname;
+	}
+
 } // namespace irc
 
 #endif /* !IRC_SESSION_PARAMETERS_HXX */
