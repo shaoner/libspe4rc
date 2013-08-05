@@ -31,7 +31,6 @@
 # include <QTcpSocket>
 
 # include "parser.hh"
-# include "irc-error.hh"
 
 /// IRC Message delimiter
 # define MSG_DELIMITER "\r\n"
@@ -65,7 +64,7 @@ namespace irc
 		void onSocketConnect();
 		void onIrcData(Message& message);
 		void onSocketDisconnect();
-		void onError(IrcError error);
+		void onSocketError(QAbstractSocket::SocketError error);
 		void onConnecting();
 	protected:
 		/// Connect to hostname and port

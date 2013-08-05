@@ -117,21 +117,7 @@ namespace irc
 	void
 	Connector::on_socket_error(QAbstractSocket::SocketError error)
 	{
-		switch (error)
-		{
-			case QAbstractSocket::RemoteHostClosedError:
-				emit onError(SOCKET_REMOTECLOSE_ERROR);
-				break;
-			case QAbstractSocket::HostNotFoundError:
-				emit onError(SOCKET_HOSTNOTFOUND_ERROR);
-				break;
-			case QAbstractSocket::ConnectionRefusedError:
-				emit onError(SOCKET_CONNECTIONREFUSED_ERROR);
-				break;
-			default:
-				emit onError(UNKNOWN_ERROR);
-				return;
-		}
+		emit onSocketError(error);
 	}
 
 } // namespace irc

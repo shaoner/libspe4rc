@@ -217,6 +217,10 @@ namespace irc
 			{
 				emit onChangeTopic(event, message.params[0], message.params[1]);
 			}
+			else if ((message.commandName == "ERROR") && (message.params.count() > 0))
+			{
+				emit onError(message.params[0]);
+			}
 			else // Unsupported command
 			{
 				qWarning() << "Unknown command " << message.commandName;

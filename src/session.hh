@@ -116,7 +116,7 @@ namespace irc
 		bool is_channel(const QString& channel) const;
 	signals:
 		/// Event notifiers
-		void onError();
+		void onError(const QString& reason);
 		void onConnect();
 		void onDisconnect();
 
