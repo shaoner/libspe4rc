@@ -46,6 +46,12 @@ namespace irc
 	{
 	}
 
+    inline SessionParameters&
+    SessionParameters::name(const QString& name)
+    {
+        _name = name;
+        return *this;
+    }
 
 	inline SessionParameters&
 	SessionParameters::hostname(const QString& hostname)

@@ -50,7 +50,8 @@ namespace irc
 		explicit SessionParameters(const QString& name);
 	public:
 		/// Parameters
-		SessionParameters& hostname(const QString& hostname);
+        SessionParameters& name(const QString& name);
+        SessionParameters& hostname(const QString& hostname);
 		SessionParameters& port(quint16 port);
 		SessionParameters& password(const QString& password);
 		SessionParameters& nickname(const QString& nickname);
