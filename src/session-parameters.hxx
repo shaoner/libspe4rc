@@ -42,7 +42,7 @@ namespace irc
 		_nickname(""),
 		_user(""),
 		_realname(""),
-		_umode(0)
+		_uMode(0)
 	{
 	}
 
@@ -104,16 +104,9 @@ namespace irc
 	}
 
 	inline SessionParameters&
-	SessionParameters::invisible()
+    SessionParameters::set_uMode(SessionMode mode)
 	{
-		_umode |= 0x8;
-		return *this;
-	}
-
-	inline SessionParameters&
-	SessionParameters::receiveWallops()
-	{
-		_umode |= 0x4;
+        _uMode |= mode;
 		return *this;
 	}
 
@@ -164,6 +157,12 @@ namespace irc
 	{
 		return _altnickname;
 	}
+
+    inline bool
+    SessionParameters::has_uMode(SessionMode mode) const
+    {
+        return (_uMode & mode) == mode;
+    }
 
 } // namespace irc
 

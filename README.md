@@ -70,8 +70,8 @@ class MyIrcClient : public QObject
 										.altnickname("shaoner3")
 										.user("shaoner")
 										.realname("we do not break userspace MAURO")
-										.invisible()
-										.receiveWallops()
+										.set_uMode(irc::MODE_INVISIBLE)
+										.set_uMode(irc::MODE_RECEIVE_WALLOPS)
 
 		// Attach to some event listeners
 		connect(session, SIGNAL(onJoin(CommandEvent&, const QString&)), this, SLOT(on_join(CommandEvent& event, const QString&)));

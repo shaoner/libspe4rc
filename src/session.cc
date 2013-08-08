@@ -43,7 +43,7 @@ namespace irc
 		_altnickname(sessionParam._altnickname),
 		_user(sessionParam._user),
 		_realname(sessionParam._realname),
-		_umode(sessionParam._umode),
+		_umode(sessionParam._uMode),
 		_uListCreating(false)
 	{
 		// Socket events

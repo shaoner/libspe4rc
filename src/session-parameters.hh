@@ -39,6 +39,12 @@ namespace irc
 
 	class Session;
 
+    enum SessionMode
+    {
+        MODE_RECEIVE_WALLOPS = 0x4,
+        MODE_INVISIBLE = 0x8
+    };
+
 	/*!
 	 * \class SessionParameters
 	 * \brief Named parameter idiom for Session
@@ -58,8 +64,7 @@ namespace irc
 		SessionParameters& user(const QString& user);
 		SessionParameters& realname(const QString& user);
 		SessionParameters& altnickname(const QString& nickname);
-		SessionParameters& invisible();
-		SessionParameters& receiveWallops();
+        SessionParameters& set_uMode(SessionMode mode);
 		const QString& name() const;
 		const QString& hostname() const;
 		quint16 port() const;
@@ -68,6 +73,7 @@ namespace irc
 		const QString& user() const;
 		const QString& realname() const;
 		const QStringList& altnickname() const;
+        bool has_uMode(SessionMode mode) const;
 	private:
 		friend class Session;
 		QString _name;
@@ -78,9 +84,8 @@ namespace irc
 		QString _user;
 		QString _realname;
 		QStringList _altnickname;
-		quint8 _umode;
-	};
-
+		quint8 _uMode;
+    };
 } // namespace irc
 
 # include "session-parameters.hxx"
