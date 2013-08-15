@@ -99,7 +99,14 @@ namespace irc
 	inline SessionParameters&
 	SessionParameters::altnickname(const QString& nickname)
 	{
-		_altnickname.append(nickname);
+		_altnickname << nickname;
+		return *this;
+	}
+
+	inline SessionParameters&
+	SessionParameters::altnickname(const QStringList& nicknames)
+	{
+		_altnickname << nicknames;
 		return *this;
 	}
 

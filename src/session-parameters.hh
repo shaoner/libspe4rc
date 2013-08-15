@@ -64,7 +64,8 @@ namespace irc
 		SessionParameters& user(const QString& user);
 		SessionParameters& realname(const QString& user);
 		SessionParameters& altnickname(const QString& nickname);
-        SessionParameters& set_uMode(SessionMode mode);
+		SessionParameters& altnickname(const QStringList& nicknames);
+		SessionParameters& set_uMode(SessionMode mode);
 		const QString& name() const;
 		const QString& hostname() const;
 		quint16 port() const;
