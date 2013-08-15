@@ -50,18 +50,20 @@ namespace irc
 	User::add_prefix(char prefix)
 	{
 		quint8 role = Role::get()->from_prefix(prefix);
-  		if (role > _roles)
+		quint8 oldRoles = _roles;
+		// We need to set it before, because of onChangeFullNick signal
+		_roles |= role;
+		if (role > oldRoles)
 		{
 			_prefix = prefix;
 			// If there already is a prefix, we replace it
 			// Otherwise, we prepend it
-			if (_roles)
+			if (oldRoles)
 				_fullnick.replace(0, 1, _prefix);
 			else
 				_fullnick.prepend(_prefix);
 			emit onChangeFullNick(_nick);
 		}
-		_roles |= role;
 	}
 
 	void
