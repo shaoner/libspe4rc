@@ -45,7 +45,6 @@ namespace irc
 	{
 		Q_OBJECT
 
-		friend UserList;
 	public:
 		/// Dtor
 		~User();
@@ -72,6 +71,7 @@ namespace irc
 		/// Ctor
 		User(const QString& fullnick);
 	private:
+		friend class UserList;
 		QString _fullnick;
 		QString _nick;
 		char _prefix;
@@ -105,7 +105,7 @@ namespace irc
 	inline bool
 	operator<(User& user1, User& user2)
 	{
-		quint8 r1 = uint8_msb(user1._roles);
+		quint8 r1 = uint8_msb(user2._roles);
 		quint8 r2 = uint8_msb(user2._roles);
 		if (r1 == r2)
 			return QString::compare(user1._nick, user2._nick, Qt::CaseInsensitive) > 0;
