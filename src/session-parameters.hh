@@ -53,7 +53,7 @@ namespace irc
 	{
 	public:
 		/// Ctor
-		explicit SessionParameters(const QString& name);
+		explicit SessionParameters(const QString& name = "");
 	public:
 		/// Parameters
         SessionParameters& name(const QString& name);
